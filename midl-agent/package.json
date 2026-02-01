@@ -4,12 +4,14 @@
   "description": "A specialized AI assistant for vibecoders building Web3 applications on Bitcoin and MIDL using the JavaScript SDK.",
   "main": "init-session.js",
   "scripts": {
-    "test": "vitest run"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@octokit/rest": "^22.0.1"
   },
