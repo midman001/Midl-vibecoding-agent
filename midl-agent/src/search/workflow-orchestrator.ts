@@ -10,6 +10,10 @@ import { FixImplementer, FixResult } from "./fix-implementer.js";
 import { GitHubClient } from "./github-client.js";
 import { AttachmentFetcher } from "./attachment-fetcher.js";
 import {
+  DiagnosticReportGenerator,
+  DiagnosticContext,
+} from "./diagnostic-report-generator.js";
+import {
   loadSearchConfig,
   SearchConfig,
 } from "./search-config.js";
@@ -32,6 +36,8 @@ export interface WorkflowResult {
   reportDraft: BugReportDraft | null;
   /** Formatted output for the agent to present to the user */
   formattedResponse: string;
+  /** Diagnostic report generated during submission */
+  diagnosticReport?: { markdown: string; sizeBytes: number; sectionCount: number };
 }
 
 export class WorkflowOrchestrator {
@@ -43,6 +49,7 @@ export class WorkflowOrchestrator {
   private fixImplementer: FixImplementer;
   private githubClient: GitHubClient;
   private attachmentFetcher: AttachmentFetcher;
+  private diagnosticReportGenerator: DiagnosticReportGenerator;
   private config: SearchConfig;
 
   constructor(deps?: {
@@ -54,6 +61,7 @@ export class WorkflowOrchestrator {
     fixImplementer?: FixImplementer;
     githubClient?: GitHubClient;
     attachmentFetcher?: AttachmentFetcher;
+    diagnosticReportGenerator?: DiagnosticReportGenerator;
     config?: SearchConfig;
   }) {
     this.config = deps?.config ?? loadSearchConfig();
@@ -69,7 +77,7 @@ export class WorkflowOrchestrator {
         fetcher: this.attachmentFetcher
       });
     this.solutionExtractor =
-      deps?.solutionExtractor ?? new SolutionExtractor();
+      deps?.solutionExtractor ?? new SolutionExtractor(this.githubClient);
     this.applicabilityScorer =
       deps?.applicabilityScorer ?? new ApplicabilityScorer();
     this.reportGenerator =
@@ -77,6 +85,8 @@ export class WorkflowOrchestrator {
     this.issueCreator =
       deps?.issueCreator ?? new IssueCreator({ client: this.githubClient });
     this.fixImplementer = deps?.fixImplementer ?? new FixImplementer();
+    this.diagnosticReportGenerator =
+      deps?.diagnosticReportGenerator ?? new DiagnosticReportGenerator();
   }
 
   /**
@@ -193,8 +203,18 @@ export class WorkflowOrchestrator {
    */
   async submitReport(
     draft: BugReportDraft,
-    labels?: string[]
+    labels?: string[],
+    diagnosticContext?: DiagnosticContext
   ): Promise<IssueCreationResult> {
+    if (diagnosticContext) {
+      const report = this.diagnosticReportGenerator.generate(diagnosticContext);
+      const summary = this.diagnosticReportGenerator.generateIssueSummary(diagnosticContext);
+      return this.issueCreator.createFromDraft(draft, labels, {
+        markdown: report.markdown,
+        filename: report.filename,
+        summary,
+      });
+    }
     return this.issueCreator.createFromDraft(draft, labels);
   }
 
@@ -227,16 +247,26 @@ export class WorkflowOrchestrator {
       "I searched GitHub and found some existing solutions that might help:\n"
     );
 
-    for (let i = 0; i < solutions.length; i++) {
-      const s = solutions[i];
-      const issueNum = s.solution.sourceComment.id;
-      const pct = Math.round(s.score * 100);
-      const levelLabel =
-        s.level === "very likely"
-          ? "Very likely to help"
-          : "Might help";
+    // Separate official and community solutions
+    const official = solutions.filter((s) => s.solution.isOfficial);
+    const community = solutions.filter((s) => !s.solution.isOfficial);
 
-      lines.push(`**${i + 1}. ${levelLabel}** (${pct}% match)`);
+    // Sort each group by score descending
+    official.sort((a, b) => b.score - a.score);
+    community.sort((a, b) => b.score - a.score);
+
+    // If only community solutions, show disclaimer
+    if (official.length === 0 && community.length > 0) {
+      lines.push(
+        "No official MIDL team response found. Community suggestions (not officially verified by MIDL team):\n"
+      );
+    }
+
+    let idx = 1;
+
+    for (const s of official) {
+      const pct = Math.round(s.score * 100);
+      lines.push(`**${idx}. \u2713 OFFICIAL FIX** (${pct}% match)`);
       lines.push(`   ${s.solution.description}`);
 
       if (s.solution.codeSnippet) {
@@ -251,6 +281,27 @@ export class WorkflowOrchestrator {
       }
 
       lines.push("");
+      idx++;
+    }
+
+    for (const s of community) {
+      const pct = Math.round(s.score * 100);
+      lines.push(`**${idx}. Community suggestion** (${pct}% match)`);
+      lines.push(`   ${s.solution.description}`);
+
+      if (s.solution.codeSnippet) {
+        lines.push("");
+        lines.push("   ```");
+        lines.push(`   ${s.solution.codeSnippet}`);
+        lines.push("   ```");
+      }
+
+      if (s.reasons.length > 0) {
+        lines.push(`   _Why: ${s.reasons.join(", ")}_`);
+      }
+
+      lines.push("");
+      idx++;
     }
 
     lines.push("**What would you like to do?**");
@@ -275,6 +326,7 @@ export class WorkflowOrchestrator {
     lines.push(`**Title:** ${draft.title}\n`);
     lines.push(this.reportGenerator.formatAsMarkdown(draft));
     lines.push("");
+    lines.push("I'll also generate a comprehensive diagnostic report for the MIDL team.\n");
     lines.push('Does this look right? You can say "yes" to submit, "edit" to modify, or add more details.');
 
     return lines.join("\n");

@@ -156,7 +156,59 @@ describe("WorkflowOrchestrator", () => {
       expect(result.hasSolutions).toBe(true);
       expect(result.solutions.length).toBeGreaterThan(0);
       expect(result.reportDraft).toBeNull();
-      expect(result.formattedResponse).toContain("solutions");
+      expect(result.formattedResponse).toContain("Community suggestion");
+    });
+
+    it("shows OFFICIAL FIX badge for official solutions", async () => {
+      const mocks = buildMocks();
+      mocks.applicabilityScorer.scoreApplicability.mockReturnValue(
+        makeApplicabilityResult({ solution: makeSolution({ isOfficial: true }) })
+      );
+      const orchestrator = new WorkflowOrchestrator(mocks);
+
+      const result = await orchestrator.handleProblemReport("test");
+
+      expect(result.formattedResponse).toContain("OFFICIAL FIX");
+    });
+
+    it("official solutions appear before community solutions", async () => {
+      const mocks = buildMocks();
+      let callCount = 0;
+      mocks.duplicateDetector.detect.mockResolvedValue(
+        makeDuplicateResult([makeIssue(1), makeIssue(2)])
+      );
+      mocks.solutionExtractor.extract.mockResolvedValue([makeSolution()]);
+      mocks.applicabilityScorer.scoreApplicability.mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return makeApplicabilityResult({
+            solution: makeSolution({ isOfficial: false }),
+            score: 0.9,
+          });
+        }
+        return makeApplicabilityResult({
+          solution: makeSolution({ isOfficial: true }),
+          score: 0.7,
+        });
+      });
+      const orchestrator = new WorkflowOrchestrator(mocks);
+
+      const result = await orchestrator.handleProblemReport("test");
+
+      const officialIdx = result.formattedResponse.indexOf("OFFICIAL FIX");
+      const communityIdx = result.formattedResponse.indexOf("Community suggestion");
+      expect(officialIdx).toBeLessThan(communityIdx);
+    });
+
+    it("shows community disclaimer when no official solutions exist", async () => {
+      const mocks = buildMocks();
+      const orchestrator = new WorkflowOrchestrator(mocks);
+
+      const result = await orchestrator.handleProblemReport("test");
+
+      expect(result.formattedResponse).toContain(
+        "not officially verified by MIDL team"
+      );
     });
 
     it("no solutions: returns report draft when extractor finds nothing", async () => {
@@ -250,6 +302,41 @@ describe("WorkflowOrchestrator", () => {
         ["bug"]
       );
       expect(result.created).toBe(true);
+    });
+
+    it("generates and passes diagnostic report when diagnosticContext provided", async () => {
+      const mocks = buildMocks();
+      (mocks as any).diagnosticReportGenerator = {
+        generate: vi.fn().mockReturnValue({
+          markdown: "# Report",
+          sizeBytes: 8,
+          sectionCount: 5,
+          filename: "diagnostic-report-2026-02-01T00-00-00.md",
+        }),
+        generateIssueSummary: vi.fn().mockReturnValue("Summary text"),
+      };
+      const orchestrator = new WorkflowOrchestrator(mocks);
+      const draft = makeDraft();
+      const diagCtx = {
+        userDescription: "test",
+        errorMessages: [],
+        environment: {},
+        searchSteps: { searchTerms: [], resultsCount: 0, duplicatesFound: 0, similarityScores: [] },
+        fixesAttempted: [],
+        suggestions: { possibleCauses: [], recommendedFixes: [], testCases: [] },
+      };
+
+      await orchestrator.submitReport(draft, ["bug"], diagCtx);
+
+      expect(mocks.issueCreator.createFromDraft).toHaveBeenCalledWith(
+        draft,
+        ["bug"],
+        expect.objectContaining({
+          markdown: "# Report",
+          filename: "diagnostic-report-2026-02-01T00-00-00.md",
+          summary: "Summary text",
+        })
+      );
     });
   });
 
