@@ -15,6 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: GitHub API Foundation** - Authenticated GitHub client with rate limiting
 - [x] **Phase 2: Search & Duplicate Detection** - Core search, similarity scoring, and duplicate flagging
 - [x] **Phase 2.1: Attachment Content Extraction** (INSERTED) - Fetch and analyze issue attachments for accurate duplicate detection
+- [ ] **Phase 2.2: Enhanced Solution Prioritization and Detailed Bug Reports** (INSERTED) - Prioritize official team solutions and generate comprehensive diagnostic reports
 - [x] **Phase 3: Solution Extraction & User Flow** - Present solutions and integrate with bug report workflow
 - [x] **Phase 4: Testing** - Unit and integration tests with >85% coverage
 - [ ] **Phase 5: Packaging & Distribution** - README, examples, and installation guide for public release
@@ -69,6 +70,18 @@ Plans:
 - [x] 02.1-01-PLAN.md — TDD: AttachmentFetcher class with URL extraction, content fetching, and caching
 - [x] 02.1-02-PLAN.md — Wire attachment content into SimilarityScorer and DuplicateDetector
 
+### Phase 2.2: Enhanced Solution Prioritization and Detailed Bug Reports (INSERTED)
+**Goal**: Prioritize official team solutions and generate comprehensive diagnostic reports for new issues
+**Depends on**: Phase 2.1
+**Requirements**: Testing discovery - need to distinguish official fixes from suggestions, and provide detailed context for new issues
+**Plans**: 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 2.2 to break down)
+
+**Details:**
+[To be added during planning]
+
 ### Phase 3: Solution Extraction & User Flow
 **Goal**: Users see existing solutions before creating reports and can choose to proceed or stop
 **Depends on**: Phase 2
@@ -120,13 +133,14 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. GitHub API Foundation | 1/1 | ✓ Complete | 2026-02-01 |
 | 2. Search & Duplicate Detection | 3/3 | ✓ Complete | 2026-02-01 |
 | 2.1. Attachment Content Extraction (INSERTED) | 2/2 | ✓ Complete | 2026-02-01 |
+| 2.2. Enhanced Solution Prioritization and Detailed Bug Reports (INSERTED) | 0/? | Not started | - |
 | 3. Solution Extraction & User Flow | 3/3 | ✓ Complete | 2026-02-01 |
 | 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
 | 5. Packaging & Distribution | 0/2 | Not started | - |

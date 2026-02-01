@@ -76,6 +76,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 2.1 inserted after Phase 2: Attachment Content Extraction (URGENT) - Testing discovered that issues with detailed error reports in attachments were not being detected as duplicates because similarity scoring only used issue title and body text, missing critical context from attached markdown files
+- Phase 2.2 inserted after Phase 2.1: Enhanced Solution Prioritization and Detailed Bug Reports (URGENT) - User requirement: (1) Prioritize official team fixes over community suggestions, clearly indicate source; (2) Generate comprehensive .md diagnostic reports with full context (environment, steps taken, fixes attempted, suggestions) and attach to new GitHub issues
 
 ### Pending Todos
 
