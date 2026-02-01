@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md -- GitHub client with auth, rate limiting, repo switching, and smoke tests
+- [x] 01-01-PLAN.md -- GitHub client with auth, rate limiting, repo switching, and smoke tests
 
 ### Phase 2: Search & Duplicate Detection
 **Goal**: Agent finds relevant existing issues and flags likely duplicates before the user creates a report
