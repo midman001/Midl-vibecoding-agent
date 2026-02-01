@@ -81,8 +81,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Unit tests for term-extractor, search-config, fix-implementer + coverage config
-- [ ] 04-02-PLAN.md — Integration tests for workflow-orchestrator + timeout/rate-limit/duplicate-accuracy edge cases
+- [x] 04-01-PLAN.md — Unit tests for term-extractor, search-config, fix-implementer + coverage config
+- [x] 04-02-PLAN.md — Integration tests for workflow-orchestrator + timeout/rate-limit/duplicate-accuracy edge cases
 
 ### Phase 5: Packaging & Distribution
 **Goal**: A developer can discover, install, and configure the agent from the GitHub repository alone
@@ -110,5 +110,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. GitHub API Foundation | 1/1 | ✓ Complete | 2026-02-01 |
 | 2. Search & Duplicate Detection | 3/3 | ✓ Complete | 2026-02-01 |
 | 3. Solution Extraction & User Flow | 3/3 | ✓ Complete | 2026-02-01 |
-| 4. Testing | 0/2 | Not started | - |
+| 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
 | 5. Packaging & Distribution | 0/2 | Not started | - |
