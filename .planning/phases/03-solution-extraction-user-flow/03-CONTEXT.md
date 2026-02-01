@@ -146,6 +146,47 @@ Want me to implement this fix in your code?"
 
 **Anti-pattern:** Multi-turn Q&A sessions that feel like filling out a form.
 
+### 7. Automatic GitHub Issue Creation (Non-Duplicates Only)
+
+**Decision:** Agent creates GitHub issues automatically for non-duplicate bugs, with user confirmation.
+
+**Flow:**
+1. Agent searches for duplicates using DuplicateDetector
+2. **If duplicate found (>75% similarity):**
+   - Show existing issue with solutions
+   - Offer to implement fix
+   - DO NOT create new issue (reduces duplicate noise)
+3. **If no duplicate found:**
+   - Agent drafts bug report from conversation context
+   - Shows draft to user: "Does this look right?"
+   - User confirms/edits
+   - Agent creates issue on GitHub automatically
+   - Agent returns GitHub issue URL to user
+
+**Implementation requirements:**
+- Use GitHub API `POST /repos/{owner}/{repo}/issues` endpoint
+- Requires `GITHUB_TOKEN` with `repo` or `public_repo` scope (write access)
+- Graceful degradation: if no token or insufficient permissions, provide manual submission link instead
+- Always show draft before creating (never silent creation)
+- Return issue URL after successful creation
+
+**User confirmation:**
+- Explicit: User says "yes" / "create it" / "submit"
+- Implicit after edit: User edits draft, agent asks "Create this issue?"
+- No creation without confirmation (show draft + wait for approval)
+
+**Why this reduces friction:**
+- User doesn't copy/paste report to GitHub
+- User doesn't navigate to issues page
+- User gets direct link to created issue
+- Entire flow stays in conversation (no context switching)
+
+**Fallback for token issues:**
+- No token configured → Provide clickable GitHub new issue link with pre-filled template
+- Token lacks write permission → Same fallback
+- Rate limit exceeded → Same fallback
+- Log warning but don't block the workflow
+
 ---
 
 ## Claude's Discretion
@@ -219,12 +260,6 @@ Avoid:
 
 These are explicitly OUT OF SCOPE for Phase 3. Do NOT implement.
 
-### Automatic Issue Creation
-
-**Why deferred:** User must review and confirm all GitHub submissions. Automatic posting could create spam or incorrect reports.
-
-**Phase 3 scope:** Agent drafts the report, user submits it manually via GitHub link.
-
 ### Automatic Code Changes Without Approval
 
 **Why deferred:** Even with "implement it" confirmation, show diff first. Silent code changes break trust.
@@ -272,6 +307,27 @@ These are explicitly OUT OF SCOPE for Phase 3. Do NOT implement.
 - Trigger search automatically when user describes a problem
 - No explicit command needed (agent is proactive)
 
+### With GitHub API (Phase 1 + New Endpoints)
+
+**Existing from Phase 1:**
+- `GitHubClient` with authentication and rate limiting
+- `GET /repos/{owner}/{repo}/issues` for searching (already used by Phase 2)
+- `GET /repos/{owner}/{repo}/issues/{number}` for fetching issue details
+
+**New for Phase 3:**
+- `POST /repos/{owner}/{repo}/issues` - Create new issue
+  - Requires: `repo` or `public_repo` scope on GITHUB_TOKEN
+  - Payload: `{ title, body, labels }` (labels optional)
+  - Returns: Issue object with `html_url` field
+- `GET /repos/{owner}/{repo}/issues/{number}/comments` - Fetch issue comments
+  - For solution extraction from discussions
+  - Pagination support (issues can have many comments)
+
+**Token requirements update:**
+- Phase 1: Read-only (`read:issues` scope) - sufficient for search
+- Phase 3: Write access (`repo` or `public_repo` scope) - needed for issue creation
+- Graceful degradation: If token lacks write permission, fall back to manual submission link
+
 ---
 
 ## Success Metrics
@@ -282,8 +338,9 @@ Phase 3 is successful if:
 2. ✓ Agent searches GitHub and shows relevant solutions within 5 seconds
 3. ✓ Agent explains why a solution applies to user's specific context
 4. ✓ Agent offers to implement fix OR drafts bug report (user chooses)
-5. ✓ Entire flow completes in 1-3 user interactions (vs 15+ before)
-6. ✓ 30-40% reduction in duplicate bug reports (measured after deployment)
+5. ✓ For non-duplicates: Agent creates GitHub issue automatically after user confirmation
+6. ✓ Entire flow completes in 1-3 user interactions (vs 15+ before)
+7. ✓ 30-40% reduction in duplicate bug reports (measured after deployment)
 
 ---
 
