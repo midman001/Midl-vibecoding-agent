@@ -78,11 +78,11 @@ Plans:
   2. GitHub API calls in tests use mocked responses (no real API calls)
   3. Duplicate detection accuracy is validated against known duplicate/non-duplicate pairs
   4. Timeout and rate limit edge cases are covered by tests
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: Unit tests for searcher, analyzer, and extractor
-- [ ] 04-02: Integration tests and edge case coverage
+- [ ] 04-01-PLAN.md — Unit tests for term-extractor, search-config, fix-implementer + coverage config
+- [ ] 04-02-PLAN.md — Integration tests for workflow-orchestrator + timeout/rate-limit/duplicate-accuracy edge cases
 
 ### Phase 5: Packaging & Distribution
 **Goal**: A developer can discover, install, and configure the agent from the GitHub repository alone
