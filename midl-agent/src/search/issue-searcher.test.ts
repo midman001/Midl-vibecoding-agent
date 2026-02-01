@@ -64,3 +64,32 @@ describe("IssueSearcher cache integration", () => {
     expect(client.searchIssues).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("IssueSearcher edge cases", () => {
+  it("respects timeout option and returns empty array", async () => {
+    // Mock a client that takes a long time to respond
+    const client = {
+      searchIssues: vi.fn().mockImplementation(
+        () => new Promise((resolve) => setTimeout(() => resolve([makeIssue(1)]), 5000))
+      ),
+    } as any;
+    const searcher = new IssueSearcher({ client });
+
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const results = await searcher.search("typescript compilation error", { timeoutMs: 1 });
+    warnSpy.mockRestore();
+
+    expect(results).toEqual([]);
+  });
+
+  it("handles empty search terms gracefully without API call", async () => {
+    const client = makeMockClient([makeIssue(1)]);
+    const searcher = new IssueSearcher({ client });
+
+    // "a" and "the" are stop words, should produce empty terms
+    const results = await searcher.search("a the");
+
+    expect(client.searchIssues).not.toHaveBeenCalled();
+    expect(results).toEqual([]);
+  });
+});

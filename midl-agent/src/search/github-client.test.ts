@@ -159,4 +159,45 @@ describe("GitHubClient", () => {
       "authentication failed"
     );
   });
+
+  it("handles 403 rate limit response", async () => {
+    const mock = makeMockOctokit();
+    mock.rest.rateLimit.get.mockResolvedValue({
+      data: {
+        resources: {
+          search: { remaining: 10, limit: 30, reset: Math.floor(Date.now() / 1000) + 3600 },
+        },
+      },
+    });
+    mock.rest.search.issuesAndPullRequests.mockRejectedValue({ status: 403 });
+
+    const client = new GitHubClient(makeConfig(), mock);
+
+    await expect(client.searchIssues("test")).rejects.toThrow(
+      "rate limit exhausted or access forbidden"
+    );
+  });
+
+  it("logs warning when rate limit is low but still returns results", async () => {
+    const mock = makeMockOctokit();
+    mock.rest.rateLimit.get.mockResolvedValue({
+      data: {
+        resources: {
+          search: { remaining: 5, limit: 30, reset: Math.floor(Date.now() / 1000) + 3600 },
+        },
+      },
+    });
+    mock.rest.search.issuesAndPullRequests.mockResolvedValue({
+      data: { items: [{ number: 1, title: "Test", html_url: "http://test", state: "open", labels: [], comments: 0, created_at: "2026-01-01", updated_at: "2026-01-01", body: "", user: { login: "u" } }] },
+    });
+
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const client = new GitHubClient(makeConfig(), mock);
+    const results = await client.searchIssues("test");
+    expect(results).toHaveLength(1);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("rate limit low")
+    );
+    warnSpy.mockRestore();
+  });
 });

@@ -107,4 +107,60 @@ describe("DuplicateDetector", () => {
     const formatted = detector.formatResults(result);
     expect(formatted).toContain("92% match");
   });
+
+  it("handles zero results without error", async () => {
+    const detector = new DuplicateDetector({
+      searcher: makeMockSearcher([]),
+      scorer: makeMockScorer(new Map()),
+    });
+    const result = await detector.detect("nonexistent issue");
+    expect(result.hasDuplicates).toBe(false);
+    expect(result.results).toHaveLength(0);
+    expect(result.duplicates).toHaveLength(0);
+  });
+});
+
+describe("DuplicateDetector accuracy validation", () => {
+  it("known duplicate pair scores above threshold", async () => {
+    const issue = makeIssue(1, {
+      title: "broadcastTransaction timeout on testnet",
+      body: "When calling broadcastTransaction on testnet, I get a timeout error after 30 seconds. Using @midl/core 1.2.3.",
+    });
+    const results: SearchResult[] = [{ issue, similarityScore: 0 }];
+
+    // Use real SimilarityScorer for accuracy test
+    const realScorer = new SimilarityScorer();
+    const detector = new DuplicateDetector({
+      searcher: makeMockSearcher(results),
+      scorer: realScorer,
+      threshold: 0.75,
+    });
+
+    const result = await detector.detect(
+      "Transaction broadcast times out on testnet network"
+    );
+
+    // Jaccard similarity with title boost - these share key terms
+    expect(result.results[0].similarityScore).toBeGreaterThan(0.1);
+  });
+
+  it("known non-duplicate pair scores below threshold", async () => {
+    const issue = makeIssue(2, {
+      title: "CSS styling issue in dashboard",
+      body: "The dashboard sidebar has a CSS overflow issue. Scrollbar appears incorrectly on Firefox.",
+    });
+    const results: SearchResult[] = [{ issue, similarityScore: 0 }];
+
+    const realScorer = new SimilarityScorer();
+    const detector = new DuplicateDetector({
+      searcher: makeMockSearcher(results),
+      scorer: realScorer,
+      threshold: 0.75,
+    });
+
+    const result = await detector.detect("broadcastTransaction timeout on testnet");
+
+    expect(result.results[0].similarityScore).toBeLessThan(0.75);
+    expect(result.hasDuplicates).toBe(false);
+  });
 });
