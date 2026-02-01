@@ -45,12 +45,12 @@ Plans:
   3. Issues scoring above 75% similarity are flagged as likely duplicates
   4. Search completes within 5 seconds
   5. Repeated searches for the same terms use cached results instead of hitting GitHub API again
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Search term extraction and GitHub query
-- [ ] 02-02: Similarity scoring and duplicate detection
-- [ ] 02-03: Result caching
+- [ ] 02-01-PLAN.md -- Token optional, search term extraction, and IssueSearcher pipeline
+- [ ] 02-02-PLAN.md -- In-memory search result cache with TTL
+- [ ] 02-03-PLAN.md -- Similarity scoring, duplicate detection, and cache wiring
 
 ### Phase 3: Solution Extraction & User Flow
 **Goal**: Users see existing solutions before creating reports and can choose to proceed or stop
