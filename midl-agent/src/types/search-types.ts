@@ -35,5 +35,12 @@ export interface RateLimitInfo {
   resetAt: Date;
 }
 
+export interface DuplicateDetectionResult {
+  results: SearchResult[];
+  duplicates: SearchResult[];
+  hasDuplicates: boolean;
+  searchTerms: string[];
+}
+
 export const PRODUCTION_REPO = { owner: "midl-xyz", repo: "midl-js" } as const;
 export const TESTING_REPO = { owner: "midman001", repo: "agent-testing" } as const;

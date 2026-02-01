@@ -1,17 +1,21 @@
 import { GitHubClient } from "./github-client.js";
 import { SearchTermExtractor } from "./term-extractor.js";
+import { SearchCache } from "./search-cache.js";
 import { SearchResult, SearchOptions } from "../types/search-types.js";
 
 export class IssueSearcher {
   private client: GitHubClient;
   private extractor: SearchTermExtractor;
+  private cache: SearchCache;
 
   constructor(deps?: {
     client?: GitHubClient;
     extractor?: SearchTermExtractor;
+    cache?: SearchCache;
   }) {
     this.client = deps?.client ?? new GitHubClient({});
     this.extractor = deps?.extractor ?? new SearchTermExtractor();
+    this.cache = deps?.cache ?? new SearchCache();
   }
 
   async search(
@@ -27,6 +31,15 @@ export class IssueSearcher {
       return [];
     }
 
+    // Check cache before API call
+    const cached = this.cache.get(terms);
+    if (cached) {
+      return cached.map((issue) => ({
+        issue,
+        similarityScore: 0,
+      }));
+    }
+
     const query = this.extractor.buildSearchQuery(terms);
 
     try {
@@ -36,6 +49,9 @@ export class IssueSearcher {
           setTimeout(() => reject(new Error("Search timed out")), timeoutMs)
         ),
       ]);
+
+      // Cache results before returning
+      this.cache.set(terms, issues);
 
       return issues.map((issue) => ({
         issue,

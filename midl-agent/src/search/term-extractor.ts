@@ -1,10 +1,4 @@
-const STOP_WORDS = new Set([
-  "the", "a", "an", "is", "are", "was", "were", "i", "my", "it", "this",
-  "that", "when", "how", "do", "does", "did", "not", "no", "but", "or",
-  "and", "to", "of", "in", "for", "on", "with", "at", "from", "have",
-  "has", "had", "be", "been", "can", "will", "would", "should", "could",
-  "get", "got",
-]);
+import { STOP_WORDS } from "./constants.js";
 
 export class SearchTermExtractor {
   extractTerms(description: string): string[] {
