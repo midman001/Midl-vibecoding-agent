@@ -59,6 +59,43 @@ describe("SimilarityScorer", () => {
     expect(titleScore).toBeGreaterThan(bodyScore);
   });
 
+  it("scores higher with attachmentContent matching description", () => {
+    const desc = "BIP322 signing verification failed with invalid signature";
+    const issue = makeIssue({
+      title: "Xverse BIP322 issue",
+      body: "Having trouble with BIP322 signing",
+    });
+    const scoreWithout = scorer.score(desc, issue);
+    const scoreWith = scorer.score(desc, issue, "BIP322 signing verification failed with invalid signature error thrown during process");
+    expect(scoreWith).toBeGreaterThan(scoreWithout);
+  });
+
+  it("produces same score when attachmentContent is undefined or empty", () => {
+    const desc = "typescript compilation error in build";
+    const issue = makeIssue({
+      title: "typescript compilation error",
+      body: "build fails with tsc",
+    });
+    const scoreUndefined = scorer.score(desc, issue);
+    const scoreEmpty = scorer.score(desc, issue, "");
+    const scoreOmitted = scorer.score(desc, issue, undefined);
+    expect(scoreEmpty).toBe(scoreUndefined);
+    expect(scoreOmitted).toBe(scoreUndefined);
+  });
+
+  it("attachment content with matching error terms boosts score significantly", () => {
+    const desc = "BIP322 signing verification failed invalid signature PSBT";
+    const issue = makeIssue({
+      title: "Signing issue",
+      body: "Problem with signing",
+    });
+    const attachmentContent = "Error: BIP322 signing verification failed. The PSBT contained an invalid signature that could not be validated.";
+    const scoreWith = scorer.score(desc, issue, attachmentContent);
+    const scoreWithout = scorer.score(desc, issue);
+    // Attachment content should significantly boost score
+    expect(scoreWith).toBeGreaterThan(scoreWithout + 0.1);
+  });
+
   it("score is between 0 and 1 inclusive", () => {
     const cases = [
       { desc: "", issue: makeIssue() },

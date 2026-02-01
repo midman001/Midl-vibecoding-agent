@@ -11,9 +11,9 @@ export class SimilarityScorer {
     return new Set(words);
   }
 
-  score(description: string, issue: GitHubIssueResult): number {
+  score(description: string, issue: GitHubIssueResult, attachmentContent?: string): number {
     const descTokens = this.tokenize(description);
-    const issueText = issue.title + " " + (issue.body ?? "");
+    const issueText = issue.title + " " + (issue.body ?? "") + " " + (attachmentContent ?? "");
     const issueTokens = this.tokenize(issueText);
     const titleTokens = this.tokenize(issue.title);
 
