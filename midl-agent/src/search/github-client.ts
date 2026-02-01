@@ -14,12 +14,13 @@ export class GitHubClient {
 
   constructor(config: GitHubClientConfig, octokit?: Octokit) {
     if (!config.token || config.token.trim() === "") {
-      throw new Error(
-        "GitHub token is required. Set GITHUB_TOKEN in your environment."
+      console.warn(
+        "No GitHub token provided. Using unauthenticated mode (60 requests/hour). Set GITHUB_TOKEN for better rate limits."
       );
+      this.octokit = octokit ?? new Octokit();
+    } else {
+      this.octokit = octokit ?? new Octokit({ auth: config.token });
     }
-
-    this.octokit = octokit ?? new Octokit({ auth: config.token });
 
     if (config.testingMode) {
       this.owner = TESTING_REPO.owner;

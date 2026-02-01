@@ -12,10 +12,21 @@ export interface GitHubIssueResult {
 }
 
 export interface GitHubClientConfig {
-  token: string;
-  owner: string;
-  repo: string;
+  token?: string;
+  owner?: string;
+  repo?: string;
   testingMode?: boolean;
+}
+
+export interface SearchResult {
+  issue: GitHubIssueResult;
+  similarityScore: number; // 0-1, populated later by scorer
+}
+
+export interface SearchOptions {
+  limit?: number; // default 5
+  includeClosedIssues?: boolean; // default true for duplicate detection
+  timeoutMs?: number; // default 5000
 }
 
 export interface RateLimitInfo {

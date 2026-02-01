@@ -31,16 +31,26 @@ function makeMockOctokit(overrides: Record<string, any> = {}) {
 }
 
 describe("GitHubClient", () => {
-  it("throws on missing token", () => {
-    expect(() => new GitHubClient({ token: "", owner: "", repo: "" })).toThrow(
-      "GitHub token is required"
+  it("creates successfully without token and warns about rate limits", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const mock = makeMockOctokit();
+    const client = new GitHubClient({ token: "", owner: "", repo: "" }, mock);
+    expect(client).toBeInstanceOf(GitHubClient);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("No GitHub token provided")
     );
+    warnSpy.mockRestore();
   });
 
-  it("throws on empty string token", () => {
-    expect(
-      () => new GitHubClient({ token: "   ", owner: "", repo: "" })
-    ).toThrow("GitHub token is required");
+  it("creates successfully with no token property and warns", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const mock = makeMockOctokit();
+    const client = new GitHubClient({}, mock);
+    expect(client).toBeInstanceOf(GitHubClient);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("unauthenticated mode")
+    );
+    warnSpy.mockRestore();
   });
 
   it("uses production repo by default", () => {
