@@ -131,6 +131,41 @@ export class GitHubClient {
     }
   }
 
+  async uploadFileToRepo(
+    path: string,
+    content: string,
+    message: string
+  ): Promise<{ url: string } | null> {
+    try {
+      const response = await this.octokit.rest.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path,
+        message,
+        content: Buffer.from(content, "utf-8").toString("base64"),
+      });
+      const downloadUrl = (response.data.content as any)?.download_url;
+      return downloadUrl ? { url: downloadUrl } : null;
+    } catch (error) {
+      console.warn(
+        `Failed to upload file to ${path}: ${error instanceof Error ? error.message : String(error)}`
+      );
+      return null;
+    }
+  }
+
+  async updateIssueBody(
+    issueNumber: number,
+    body: string
+  ): Promise<void> {
+    await this.octokit.rest.issues.update({
+      owner: this.owner,
+      repo: this.repo,
+      issue_number: issueNumber,
+      body,
+    });
+  }
+
   async getIssueComments(issueNumber: number): Promise<IssueComment[]> {
     await this.checkRateLimit();
     try {

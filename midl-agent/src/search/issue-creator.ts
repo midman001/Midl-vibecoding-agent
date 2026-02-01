@@ -25,11 +25,40 @@ export class IssueCreator {
 
   async createFromDraft(
     draft: BugReportDraft,
-    labels?: string[]
+    labels?: string[],
+    diagnosticReport?: { markdown: string; filename: string; summary: string }
   ): Promise<IssueCreationResult> {
-    const body = this.reportGenerator.formatAsMarkdown(draft);
+    const body = diagnosticReport
+      ? diagnosticReport.summary + "\n\n---\n\nSee attached diagnostic report for full details."
+      : this.reportGenerator.formatAsMarkdown(draft);
     try {
       const result = await this.client.createIssue(draft.title, body, labels);
+
+      if (diagnosticReport && result.number) {
+        const filePath = `diagnostics/${diagnosticReport.filename}`;
+        const uploadResult = await this.client.uploadFileToRepo(
+          filePath,
+          diagnosticReport.markdown,
+          `Add diagnostic report for issue #${result.number}`
+        );
+
+        if (uploadResult) {
+          await this.client.updateIssueBody(
+            result.number,
+            diagnosticReport.summary +
+              `\n\n---\n\n[View full diagnostic report](${uploadResult.url})`
+          );
+        } else {
+          // Fallback: embed full report in issue body
+          await this.client.updateIssueBody(
+            result.number,
+            diagnosticReport.summary +
+              "\n\n---\n\n## Diagnostic Report\n\n" +
+              diagnosticReport.markdown
+          );
+        }
+      }
+
       return {
         created: true,
         issueNumber: result.number,
