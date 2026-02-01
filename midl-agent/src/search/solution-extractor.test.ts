@@ -1,11 +1,14 @@
 import { describe, it, expect } from "vitest";
 import { SolutionExtractor } from "./solution-extractor.js";
-import { GitHubIssueResult, IssueComment } from "../types/search-types.js";
+import type {
+  GitHubIssueResult,
+  IssueComment,
+} from "../types/search-types.js";
 
 function makeComment(overrides: Partial<IssueComment> = {}): IssueComment {
   return {
     id: 1,
-    author: "helper",
+    author: "user1",
     body: "",
     createdAt: "2025-01-01T00:00:00Z",
     isAuthor: false,
@@ -14,137 +17,178 @@ function makeComment(overrides: Partial<IssueComment> = {}): IssueComment {
   };
 }
 
-function makeIssue(overrides: Partial<GitHubIssueResult> = {}): GitHubIssueResult {
-  return {
-    number: 1,
-    title: "Test issue",
-    url: "https://github.com/test/repo/issues/1",
-    status: "open",
-    labels: [],
-    comments: 0,
-    createdAt: "2025-01-01T00:00:00Z",
-    updatedAt: "2025-01-01T00:00:00Z",
-    body: "Something is broken",
-    author: "reporter",
-    ...overrides,
-  };
-}
+const issue: GitHubIssueResult = {
+  number: 1,
+  title: "Test issue",
+  url: "https://github.com/test/repo/issues/1",
+  status: "open",
+  labels: [],
+  comments: 0,
+  createdAt: "2025-01-01T00:00:00Z",
+  updatedAt: "2025-01-01T00:00:00Z",
+  body: "Test body",
+  author: "user1",
+};
 
 describe("SolutionExtractor", () => {
   const extractor = new SolutionExtractor();
 
-  it("returns empty array when no comments", () => {
-    const result = extractor.extract(makeIssue(), []);
-    expect(result).toEqual([]);
+  describe("extract", () => {
+    it("returns empty array when no comments provided", () => {
+      expect(extractor.extract(issue, [])).toEqual([]);
+    });
+
+    it("skips comments with negative signals", () => {
+      const comments = [
+        makeComment({ body: "This fixed it but didn't work after restart" }),
+      ];
+      expect(extractor.extract(issue, comments)).toEqual([]);
+    });
+
+    it("skips comments without positive signals", () => {
+      const comments = [makeComment({ body: "I have the same problem" })];
+      expect(extractor.extract(issue, comments)).toEqual([]);
+    });
+
+    it("returns solution for comment with positive signal", () => {
+      const comments = [
+        makeComment({ body: "This fixed the issue for me" }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions).toHaveLength(1);
+      expect(solutions[0].type).toBe("fix");
+    });
+
+    it("extracts code snippet from fenced code blocks", () => {
+      const comments = [
+        makeComment({
+          body: "This fixed it:\n```ts\nimport { foo } from 'bar';\n```",
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].codeSnippet).toBe("import { foo } from 'bar';");
+    });
+
+    it("returns solution without codeSnippet when no code block", () => {
+      const comments = [
+        makeComment({ body: "The fix is to update your dependency" }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].codeSnippet).toBeUndefined();
+    });
+
+    it("truncates description to 200 chars with code blocks stripped", () => {
+      const longText = "This fixed it. " + "A".repeat(250);
+      const comments = [
+        makeComment({
+          body: longText + "\n```ts\ncode\n```",
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].description.length).toBeLessThanOrEqual(200);
+      expect(solutions[0].description).not.toContain("```");
+    });
   });
 
-  it("returns empty array when no solutions found in comments", () => {
-    const comments = [makeComment({ body: "I have the same issue" })];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result).toEqual([]);
+  describe("classifyType", () => {
+    it('returns "workaround" when body contains "workaround"', () => {
+      const comments = [
+        makeComment({ body: "As a workaround, this fixed the issue" }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].type).toBe("workaround");
+    });
+
+    it('returns "config-change" when body contains "config"', () => {
+      const comments = [
+        makeComment({ body: "The fix is to change the config file" }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].type).toBe("config-change");
+    });
+
+    it('returns "fix" as default type', () => {
+      const comments = [
+        makeComment({ body: "This fixed the issue completely" }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].type).toBe("fix");
+    });
   });
 
-  it("extracts solution from comment with code block", () => {
-    const comments = [
-      makeComment({
-        body: "This fixed it for me:\n```typescript\nconst tx = await broadcastTransaction({ network: 'testnet' });\n```",
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result.length).toBe(1);
-    expect(result[0].type).toBe("fix");
-    expect(result[0].codeSnippet).toContain("broadcastTransaction");
+  describe("determineConfidence", () => {
+    it('returns "confirmed" when isAuthor and body contains "this worked"', () => {
+      const comments = [
+        makeComment({
+          body: "This fixed it and this worked perfectly",
+          isAuthor: true,
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].confidence).toBe("confirmed");
+    });
+
+    it('returns "confirmed" when reactions.plusOne >= 2', () => {
+      const comments = [
+        makeComment({
+          body: "This fixed the problem",
+          reactions: { totalCount: 3, plusOne: 2, heart: 1 },
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].confidence).toBe("confirmed");
+    });
+
+    it('returns "suggested" otherwise', () => {
+      const comments = [
+        makeComment({
+          body: "This fixed it for me",
+          isAuthor: false,
+          reactions: { totalCount: 0, plusOne: 0, heart: 0 },
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].confidence).toBe("suggested");
+    });
   });
 
-  it("detects positive signals: 'this worked', 'fixed', 'resolved'", () => {
-    const comments = [
-      makeComment({ body: "this worked for me: just update the config" }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result.length).toBe(1);
-    expect(result[0].confidence).toBe("suggested");
-  });
+  describe("extractContext", () => {
+    it("extracts sdkVersion from @midl/core pattern", () => {
+      const comments = [
+        makeComment({
+          body: "This fixed it after upgrading @midl/core 1.2.3",
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].context.sdkVersion).toBe("1.2.3");
+    });
 
-  it("skips comments with negative signals", () => {
-    const comments = [
-      makeComment({ body: "I tried updating the config but it didn't work, still broken" }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result).toEqual([]);
-  });
+    it("extracts network from body containing testnet", () => {
+      const comments = [
+        makeComment({
+          body: "This fixed the testnet issue for me",
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].context.network).toBe("testnet");
+    });
 
-  it("marks confirmed when reactions plusOne >= 2", () => {
-    const comments = [
-      makeComment({
-        body: "Fixed it by upgrading @midl/react to 1.2.0",
-        reactions: { totalCount: 3, plusOne: 3, heart: 0 },
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result.length).toBe(1);
-    expect(result[0].confidence).toBe("confirmed");
-  });
+    it("extracts methodName from body containing broadcastTransaction", () => {
+      const comments = [
+        makeComment({
+          body: "This fixed the broadcastTransaction timeout",
+        }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].context.methodName).toBe("broadcastTransaction");
+    });
 
-  it("marks confirmed when issue author says 'this worked'", () => {
-    const comments = [
-      makeComment({
-        body: "this worked! thanks!",
-        isAuthor: true,
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result.length).toBe(1);
-    expect(result[0].confidence).toBe("confirmed");
-  });
-
-  it("extracts SDK version from context", () => {
-    const comments = [
-      makeComment({
-        body: "Fixed in @midl/react 1.3.0 by updating the provider",
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result.length).toBe(1);
-    expect(result[0].context.sdkVersion).toBe("1.3.0");
-  });
-
-  it("extracts network from context", () => {
-    const comments = [
-      makeComment({
-        body: "This fixed it on testnet: change the endpoint URL",
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result[0].context.network).toBe("testnet");
-  });
-
-  it("extracts method name from context", () => {
-    const comments = [
-      makeComment({
-        body: "The fix is to call broadcastTransaction with the correct params",
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result[0].context.methodName).toBe("broadcastTransaction");
-  });
-
-  it("classifies config-change type", () => {
-    const comments = [
-      makeComment({
-        body: "Fixed by changing the config setting to enable testnet",
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result[0].type).toBe("config-change");
-  });
-
-  it("classifies workaround type", () => {
-    const comments = [
-      makeComment({
-        body: "As a workaround, you can use the alternative API endpoint",
-      }),
-    ];
-    const result = extractor.extract(makeIssue(), comments);
-    expect(result[0].type).toBe("workaround");
+    it("returns empty object when no context found", () => {
+      const comments = [
+        makeComment({ body: "This fixed it somehow" }),
+      ];
+      const solutions = extractor.extract(issue, comments);
+      expect(solutions[0].context).toEqual({});
+    });
   });
 });
