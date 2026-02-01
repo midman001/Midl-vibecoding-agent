@@ -104,13 +104,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEARCH-01 | Phase 2 | Pending |
-| SEARCH-02 | Phase 2 | Pending |
-| SEARCH-03 | Phase 2 | Pending |
-| SEARCH-04 | Phase 2 | Pending |
-| SEARCH-05 | Phase 2 | Pending |
-| SEARCH-06 | Phase 2 | Pending |
-| SEARCH-07 | Phase 2 | Pending |
+| SEARCH-01 | Phase 2 | Complete |
+| SEARCH-02 | Phase 2 | Complete |
+| SEARCH-03 | Phase 2 | Complete |
+| SEARCH-04 | Phase 2 | Complete |
+| SEARCH-05 | Phase 2 | Complete |
+| SEARCH-06 | Phase 2 | Complete |
+| SEARCH-07 | Phase 2 | Complete |
 | SEARCH-08 | Phase 3 | Pending |
 | SEARCH-09 | Phase 3 | Pending |
 | SEARCH-10 | Phase 3 | Pending |
@@ -118,12 +118,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEARCH-12 | Phase 3 | Pending |
 | SEARCH-13 | Phase 1 | Complete |
 | SEARCH-14 | Phase 1 | Complete |
-| SEARCH-15 | Phase 2 | Pending |
+| SEARCH-15 | Phase 2 | Complete |
 | INTEG-01 | Phase 3 | Pending |
 | INTEG-02 | Phase 3 | Pending |
 | INTEG-03 | Phase 1 | Complete |
 | INTEG-04 | Phase 3 | Pending |
-| INTEG-05 | Phase 2 | Pending |
+| INTEG-05 | Phase 2 | Complete |
 | INTEG-06 | Phase 1 | Complete |
 | PKG-01 | Phase 5 | Pending |
 | PKG-02 | Phase 5 | Pending |
