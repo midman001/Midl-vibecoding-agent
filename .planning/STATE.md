@@ -46,6 +46,9 @@ Recent decisions affecting current work:
 - Testing mode using midman001/agent-testing repository (Phase 1 requirement added)
 - Constructor DI pattern: classes accept optional dependencies for testing (01-01)
 - Rate limit check uses search resource quota, not core (01-01)
+- Token optional with console.warn for unauthenticated mode 60 req/hr (02-01)
+- Stop word removal + length sorting for term specificity (02-01)
+- Promise.race timeout returning empty array on timeout for graceful degradation (02-01)
 - Plain Map-based in-memory cache, no external deps (02-02)
 - Cache key normalization: sorted lowercase terms joined by pipe (02-02)
 
