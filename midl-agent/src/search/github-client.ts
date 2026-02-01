@@ -12,6 +12,7 @@ export class GitHubClient {
   public octokit: Octokit;
   public readonly owner: string;
   public readonly repo: string;
+  private orgMembershipCache: Map<string, boolean> = new Map();
 
   constructor(config: GitHubClientConfig, octokit?: Octokit) {
     if (!config.token || config.token.trim() === "") {
@@ -107,6 +108,26 @@ export class GitHubClient {
       };
     } catch (error) {
       throw this.handleApiError(error);
+    }
+  }
+
+  async checkOrgMembership(username: string, org: string = "midl-xyz"): Promise<boolean> {
+    const cacheKey = `${org}:${username}`;
+    if (this.orgMembershipCache.has(cacheKey)) {
+      return this.orgMembershipCache.get(cacheKey)!;
+    }
+
+    try {
+      await this.octokit.rest.orgs.checkMembershipForUser({
+        org,
+        username,
+      });
+      // If the call succeeds (204 or 302), the user is a member
+      this.orgMembershipCache.set(cacheKey, true);
+      return true;
+    } catch {
+      this.orgMembershipCache.set(cacheKey, false);
+      return false;
     }
   }
 

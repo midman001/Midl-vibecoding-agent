@@ -57,6 +57,7 @@ export interface Solution {
   codeSnippet?: string;
   sourceComment: IssueComment;
   confidence: "confirmed" | "suggested"; // confirmed = maintainer or positive reactions
+  isOfficial: boolean; // true if solution author is a member of the MIDL organization
   context: {
     sdkVersion?: string;
     network?: string;
