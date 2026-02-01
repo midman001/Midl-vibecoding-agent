@@ -73,6 +73,29 @@ export class GitHubClient {
     }
   }
 
+  async createIssue(
+    title: string,
+    body: string,
+    labels?: string[]
+  ): Promise<{ number: number; url: string }> {
+    await this.checkRateLimit();
+    try {
+      const response = await this.octokit.rest.issues.create({
+        owner: this.owner,
+        repo: this.repo,
+        title,
+        body,
+        labels: labels ?? [],
+      });
+      return {
+        number: response.data.number,
+        url: response.data.html_url,
+      };
+    } catch (error) {
+      throw this.handleApiError(error);
+    }
+  }
+
   async getRateLimitInfo(): Promise<RateLimitInfo> {
     try {
       const response = await this.octokit.rest.rateLimit.get();
