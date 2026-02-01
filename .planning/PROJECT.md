@@ -81,7 +81,7 @@ Vibecoders get instant, expert MIDL SDK assistance with automatic duplicate dete
 ## Constraints
 
 - **Platform**: Must run as Claude Code agent — Required for target user base
-- **API Access**: Requires GitHub personal access token (read:issues scope) — Needed for search feature
+- **API Access**: Optional GitHub personal access token (read:issues scope) — Recommended for better rate limits, works without for instant use
 - **Node.js**: 14+ required — Existing codebase dependency
 - **Claude Code Integration**: Must use agent hooks and system prompt format — Platform requirement
 - **Rate Limits**: GitHub API has 5000 req/hr authenticated limit — Design searches to stay within limit
@@ -101,6 +101,7 @@ Vibecoders get instant, expert MIDL SDK assistance with automatic duplicate dete
 | Show solutions before creating report | Reduce duplicates, faster user resolution | — Pending |
 | Keep existing bug report workflow intact | Backward compatibility, gradual rollout | — Pending |
 | Testing mode with midman001/agent-testing repo | Safe testing without polluting production repo or rate limits | — Pending |
+| GitHub token optional (graceful degradation) | Works instantly without setup (60 req/hr), upgradeable with token (5000 req/hr) for power users | ✓ Decided 2026-02-01 |
 
 ---
-*Last updated: 2026-02-01 after adding testing mode requirement*
+*Last updated: 2026-02-01 after token policy decision*
