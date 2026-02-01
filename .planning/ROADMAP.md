@@ -30,10 +30,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Agent gracefully handles rate limit exhaustion without crashing
   4. Agent logs or surfaces authentication errors clearly to the user
   5. Agent can switch to testing mode using midman001/agent-testing repository
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 01-01: GitHub API client with auth and rate limiting
+- [ ] 01-01-PLAN.md -- GitHub client with auth, rate limiting, repo switching, and smoke tests
 
 ### Phase 2: Search & Duplicate Detection
 **Goal**: Agent finds relevant existing issues and flags likely duplicates before the user creates a report
@@ -107,7 +107,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. GitHub API Foundation | 0/1 | Not started | - |
+| 1. GitHub API Foundation | 0/1 | Planned | - |
 | 2. Search & Duplicate Detection | 0/3 | Not started | - |
 | 3. Solution Extraction & User Flow | 0/3 | Not started | - |
 | 4. Testing | 0/2 | Not started | - |
