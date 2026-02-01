@@ -19,9 +19,9 @@ Progress: [#############] 100%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: 2.8 min
-- Total execution time: 33 min
+- Total execution time: 37 min
 
 **By Phase:**
 
@@ -32,10 +32,10 @@ Progress: [#############] 100%
 | 03-solution-extraction-user-flow | 3 | 10 min | 3.3 min |
 | 04-testing | 2 | 7 min | 3.5 min |
 | 02.1-attachment-content-extraction | 2 | 5 min | 2.5 min |
-| 02.2-enhanced-solution-prioritization | 1 | 1 min | 1 min |
+| 02.2-enhanced-solution-prioritization | 2 | 5 min | 2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-01 (3 min), 04-02 (4 min), 02.1-01 (2 min), 02.1-02 (3 min), 02.2-02 (1 min)
+- Last 5 plans: 04-02 (4 min), 02.1-01 (2 min), 02.1-02 (3 min), 02.2-01 (4 min), 02.2-02 (1 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -73,6 +73,8 @@ Recent decisions affecting current work:
 - Duplicate accuracy test threshold >0.1 for Jaccard similarity with differently-worded near-duplicates (04-02)
 - Private Map cache for attachment content instead of reusing SearchCache (different value shape) (02.1-01)
 - Optional attachmentContent parameter on score() for backward compatibility (02.1-02)
+- Org membership check treats any successful Octokit response as member (02.2-01)
+- SolutionExtractor accepts optional GitHubClient, defaults isOfficial to false (02.2-01)
 - Stateless DiagnosticReportGenerator with pure function on input data, no external deps (02.2-02)
 - Error message truncation at 500 chars with "... (truncated)" suffix (02.2-02)
 - Fixed 5-section markdown report structure for diagnostic reports (02.2-02)
