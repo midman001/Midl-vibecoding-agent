@@ -14,8 +14,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: GitHub API Foundation** - Authenticated GitHub client with rate limiting
 - [x] **Phase 2: Search & Duplicate Detection** - Core search, similarity scoring, and duplicate flagging
-- [ ] **Phase 3: Solution Extraction & User Flow** - Present solutions and integrate with bug report workflow
-- [ ] **Phase 4: Testing** - Unit and integration tests with >85% coverage
+- [x] **Phase 2.1: Attachment Content Extraction** (INSERTED) - Fetch and analyze issue attachments for accurate duplicate detection
+- [x] **Phase 3: Solution Extraction & User Flow** - Present solutions and integrate with bug report workflow
+- [x] **Phase 4: Testing** - Unit and integration tests with >85% coverage
 - [ ] **Phase 5: Packaging & Distribution** - README, examples, and installation guide for public release
 
 ## Phase Details
@@ -51,6 +52,22 @@ Plans:
 - [x] 02-01-PLAN.md -- Token optional, search term extraction, and IssueSearcher pipeline
 - [x] 02-02-PLAN.md -- In-memory search result cache with TTL
 - [x] 02-03-PLAN.md -- Similarity scoring, duplicate detection, and cache wiring
+
+### Phase 2.1: Attachment Content Extraction (INSERTED)
+**Goal**: Improve duplicate detection accuracy by including attachment content in similarity scoring
+**Depends on**: Phase 2
+**Requirements**: Testing discovery - attachment content critical for duplicate detection
+**Success Criteria** (what must be TRUE):
+  1. Agent fetches markdown/text attachments from issue bodies (GitHub user-attachments links)
+  2. Attachment content is included in similarity scoring alongside issue title and body
+  3. Issues with detailed error reports in attachments are correctly identified as duplicates
+  4. Fetch failures degrade gracefully without breaking duplicate detection
+  5. Attachment content is cached with the same TTL as search results
+**Plans**: 2 plans
+
+Plans:
+- [x] 02.1-01-PLAN.md — TDD: AttachmentFetcher class with URL extraction, content fetching, and caching
+- [x] 02.1-02-PLAN.md — Wire attachment content into SimilarityScorer and DuplicateDetector
 
 ### Phase 3: Solution Extraction & User Flow
 **Goal**: Users see existing solutions before creating reports and can choose to proceed or stop
@@ -103,12 +120,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. GitHub API Foundation | 1/1 | ✓ Complete | 2026-02-01 |
 | 2. Search & Duplicate Detection | 3/3 | ✓ Complete | 2026-02-01 |
+| 2.1. Attachment Content Extraction (INSERTED) | 2/2 | ✓ Complete | 2026-02-01 |
 | 3. Solution Extraction & User Flow | 3/3 | ✓ Complete | 2026-02-01 |
 | 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
 | 5. Packaging & Distribution | 0/2 | Not started | - |
