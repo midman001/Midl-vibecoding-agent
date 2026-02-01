@@ -19,6 +19,7 @@ function makeSolution(overrides: Partial<Solution> = {}): Solution {
     description: "Update the provider",
     sourceComment: makeComment(),
     confidence: "suggested",
+    isOfficial: false,
     context: {},
     ...overrides,
   };

@@ -17,6 +17,7 @@ function makeSolution(overrides: Partial<Solution> = {}): Solution {
       reactions: { totalCount: 0, plusOne: 0, heart: 0 },
     },
     confidence: "suggested",
+    isOfficial: false,
     context: {},
     ...overrides,
   };

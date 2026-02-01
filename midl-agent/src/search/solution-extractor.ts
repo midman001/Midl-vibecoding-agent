@@ -3,6 +3,7 @@ import {
   IssueComment,
   Solution,
 } from "../types/search-types.js";
+import { GitHubClient } from "./github-client.js";
 
 const POSITIVE_SIGNALS = [
   "this worked",
@@ -51,7 +52,9 @@ const METHOD_NAMES = [
 const SDK_VERSION_PATTERN = /(?:@midl\/\w+\s+|v)((\d+\.\d+\.\d+))/i;
 
 export class SolutionExtractor {
-  extract(issue: GitHubIssueResult, comments: IssueComment[]): Solution[] {
+  constructor(private githubClient?: GitHubClient) {}
+
+  async extract(issue: GitHubIssueResult, comments: IssueComment[]): Promise<Solution[]> {
     const solutions: Solution[] = [];
 
     for (const comment of comments) {
@@ -90,12 +93,23 @@ export class SolutionExtractor {
         .trim()
         .slice(0, 200);
 
+      // Determine if solution is from an official MIDL team member
+      let isOfficial = false;
+      if (this.githubClient) {
+        try {
+          isOfficial = await this.githubClient.checkOrgMembership(comment.author);
+        } catch {
+          isOfficial = false;
+        }
+      }
+
       solutions.push({
         type,
         description,
         codeSnippet,
         sourceComment: comment,
         confidence,
+        isOfficial,
         context,
       });
     }

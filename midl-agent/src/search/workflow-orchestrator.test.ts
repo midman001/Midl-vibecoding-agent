@@ -47,6 +47,7 @@ function makeSolution(overrides: Partial<Solution> = {}): Solution {
     codeSnippet: 'npm install @midl/core@latest',
     sourceComment: makeComment(1, "This fixed it for me"),
     confidence: "confirmed",
+    isOfficial: false,
     context: {
       sdkVersion: "1.2.3",
       network: "testnet",
@@ -98,7 +99,7 @@ function buildMocks() {
       detect: vi.fn().mockResolvedValue(makeDuplicateResult()),
     } as any,
     solutionExtractor: {
-      extract: vi.fn().mockReturnValue([makeSolution()]),
+      extract: vi.fn().mockResolvedValue([makeSolution()]),
     } as any,
     applicabilityScorer: {
       scoreApplicability: vi.fn().mockReturnValue(makeApplicabilityResult()),
@@ -160,7 +161,7 @@ describe("WorkflowOrchestrator", () => {
 
     it("no solutions: returns report draft when extractor finds nothing", async () => {
       const mocks = buildMocks();
-      mocks.solutionExtractor.extract.mockReturnValue([]);
+      mocks.solutionExtractor.extract.mockResolvedValue([]);
       const orchestrator = new WorkflowOrchestrator(mocks);
 
       const result = await orchestrator.handleProblemReport("some issue");

@@ -125,7 +125,7 @@ export class WorkflowOrchestrator {
             comment.isAuthor = comment.author === result.issue.author;
           }
 
-          const extracted = this.solutionExtractor.extract(
+          const extracted = await this.solutionExtractor.extract(
             result.issue,
             comments
           );
