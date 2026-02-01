@@ -62,12 +62,12 @@ Plans:
   3. User can proceed with a new bug report if existing solutions do not help
   4. Existing bug report workflow works identically to before when no search results are relevant
   5. Search behavior is configurable via a config file (thresholds, result limits)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Solution and workaround extraction
-- [ ] 03-02: User decision flow and workflow integration
-- [ ] 03-03: Search configuration
+- [ ] 03-01-PLAN.md -- TDD: Solution extraction, applicability scoring, and GitHub comments API
+- [ ] 03-02-PLAN.md -- Search config, bug report generator, and issue creator
+- [ ] 03-03-PLAN.md -- Workflow orchestrator and system prompt/workflow doc updates
 
 ### Phase 4: Testing
 **Goal**: All new code is validated with automated tests covering core paths and edge cases
