@@ -8,6 +8,7 @@ import {
 import { IssueCreator, IssueCreationResult } from "./issue-creator.js";
 import { FixImplementer, FixResult } from "./fix-implementer.js";
 import { GitHubClient } from "./github-client.js";
+import { AttachmentFetcher } from "./attachment-fetcher.js";
 import {
   loadSearchConfig,
   SearchConfig,
@@ -41,6 +42,7 @@ export class WorkflowOrchestrator {
   private issueCreator: IssueCreator;
   private fixImplementer: FixImplementer;
   private githubClient: GitHubClient;
+  private attachmentFetcher: AttachmentFetcher;
   private config: SearchConfig;
 
   constructor(deps?: {
@@ -51,15 +53,21 @@ export class WorkflowOrchestrator {
     issueCreator?: IssueCreator;
     fixImplementer?: FixImplementer;
     githubClient?: GitHubClient;
+    attachmentFetcher?: AttachmentFetcher;
     config?: SearchConfig;
   }) {
     this.config = deps?.config ?? loadSearchConfig();
     this.githubClient =
       deps?.githubClient ??
       new GitHubClient({ token: process.env.GITHUB_TOKEN });
+    this.attachmentFetcher =
+      deps?.attachmentFetcher ?? new AttachmentFetcher();
     this.duplicateDetector =
       deps?.duplicateDetector ??
-      new DuplicateDetector({ threshold: this.config.duplicateThreshold });
+      new DuplicateDetector({
+        threshold: this.config.duplicateThreshold,
+        fetcher: this.attachmentFetcher
+      });
     this.solutionExtractor =
       deps?.solutionExtractor ?? new SolutionExtractor();
     this.applicabilityScorer =
