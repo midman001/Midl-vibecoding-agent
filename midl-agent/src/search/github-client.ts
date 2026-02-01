@@ -2,6 +2,7 @@ import { Octokit } from "@octokit/rest";
 import {
   GitHubClientConfig,
   GitHubIssueResult,
+  IssueComment,
   RateLimitInfo,
   PRODUCTION_REPO,
   TESTING_REPO,
@@ -81,6 +82,32 @@ export class GitHubClient {
         limit,
         resetAt: new Date(reset * 1000),
       };
+    } catch (error) {
+      throw this.handleApiError(error);
+    }
+  }
+
+  async getIssueComments(issueNumber: number): Promise<IssueComment[]> {
+    await this.checkRateLimit();
+    try {
+      const response = await this.octokit.rest.issues.listComments({
+        owner: this.owner,
+        repo: this.repo,
+        issue_number: issueNumber,
+        per_page: 50,
+      });
+      return response.data.map((comment) => ({
+        id: comment.id,
+        author: comment.user?.login ?? "unknown",
+        body: comment.body ?? "",
+        createdAt: comment.created_at,
+        isAuthor: false, // caller sets this by comparing to issue author
+        reactions: {
+          totalCount: (comment as any).reactions?.total_count ?? 0,
+          plusOne: (comment as any).reactions?.["+1"] ?? 0,
+          heart: (comment as any).reactions?.heart ?? 0,
+        },
+      }));
     } catch (error) {
       throw this.handleApiError(error);
     }
