@@ -1,5 +1,6 @@
 import { IssueSearcher } from "./issue-searcher.js";
 import { SimilarityScorer } from "./similarity-scorer.js";
+import { AttachmentFetcher } from "./attachment-fetcher.js";
 import type {
   SearchOptions,
   DuplicateDetectionResult,
@@ -8,15 +9,18 @@ import type {
 export class DuplicateDetector {
   private searcher: IssueSearcher;
   private scorer: SimilarityScorer;
+  private fetcher?: AttachmentFetcher;
   private threshold: number;
 
   constructor(deps?: {
     searcher?: IssueSearcher;
     scorer?: SimilarityScorer;
+    fetcher?: AttachmentFetcher;
     threshold?: number;
   }) {
     this.searcher = deps?.searcher ?? new IssueSearcher();
     this.scorer = deps?.scorer ?? new SimilarityScorer();
+    this.fetcher = deps?.fetcher;
     this.threshold = deps?.threshold ?? 0.75;
   }
 
@@ -27,7 +31,14 @@ export class DuplicateDetector {
     const results = await this.searcher.search(description, options);
 
     for (const result of results) {
-      result.similarityScore = this.scorer.score(description, result.issue);
+      let attachmentContent = "";
+      if (this.fetcher) {
+        attachmentContent = await this.fetcher.fetchAttachmentContent(
+          result.issue.number,
+          result.issue.body ?? ""
+        );
+      }
+      result.similarityScore = this.scorer.score(description, result.issue, attachmentContent);
     }
 
     results.sort((a, b) => b.similarityScore - a.similarityScore);
