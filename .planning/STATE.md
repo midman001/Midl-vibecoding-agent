@@ -108,6 +108,7 @@ Recent decisions affecting current work:
 - Phase 2.2 inserted after Phase 2.1: Enhanced Solution Prioritization and Detailed Bug Reports (URGENT) - User requirement: (1) Prioritize official team fixes over community suggestions, clearly indicate source; (2) Generate comprehensive .md diagnostic reports with full context (environment, steps taken, fixes attempted, suggestions) and attach to new GitHub issues
 - Phase 4.1 inserted after Phase 4: Fix GitHub Search OR Logic (URGENT) - Real-world testing revealed search uses AND logic, preventing duplicate detection when issue titles lack all search terms (e.g., Issue #2 "Xverse and BIP322" not found when searching "executor-react unknown letter xverse bip" because title doesn't contain all terms)
 - **2026-02-02: Major architectural pivot** - Phase 4.1 removed. GitHub integration features (search, duplicate detection, issue creation) being removed in new Phase 5. Focus shifting to diagnostic reports only. Discord integration planned for Phase 6. Original Phase 5 (Packaging) moved to Phase 7.
+- Phase 6.1 inserted after Phase 6: MCP Server for Discord Posting (URGENT) - Phase 6 implementation created WorkflowOrchestrator.postToDiscord() requiring bot token, which cannot be distributed with public agent. MCP server architecture needed to enable Claude agents to post to Discord without credential exposure.
 
 ### Pending Todos
 

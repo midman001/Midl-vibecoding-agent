@@ -19,7 +19,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Solution Extraction & User Flow** - Present solutions and integrate with bug report workflow
 - [x] **Phase 4: Testing** - Unit and integration tests with >85% coverage
 - [x] **Phase 5: Remove GitHub Integration** - Segregate and disable GitHub features, keep diagnostic reports
-- [ ] **Phase 6: Discord Integration** - Discord bot with slash commands, forum posting, and dev resource commands
+- [x] **Phase 6: Discord Integration** - Discord bot with slash commands, forum posting, and dev resource commands
+- [ ] **Phase 6.1: MCP Server for Discord Posting** (INSERTED) - Enable Claude agents to post to Discord without bot token exposure
 - [ ] **Phase 7: Packaging & Distribution** - README, examples, and installation guide for public release
 
 ## Phase Details
@@ -149,11 +150,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Discord.js setup, DiscordClient wrapper, config types, .env.example
-- [ ] 06-02-PLAN.md — ForumPoster class for posting diagnostic reports to forum threads
-- [ ] 06-03-PLAN.md — Utility slash commands (/help, /status, /links, /networks) and CommandHandler
-- [ ] 06-04-PLAN.md — /report-bug slash command wiring WorkflowOrchestrator to ForumPoster
-- [ ] 06-05-PLAN.md — Bot entry point, WorkflowOrchestrator Discord wiring, agent config updates
+- [x] 06-01-PLAN.md — Discord.js setup, DiscordClient wrapper, config types, .env.example
+- [x] 06-02-PLAN.md — ForumPoster class for posting diagnostic reports to forum threads
+- [x] 06-03-PLAN.md — Utility slash commands (/help, /status, /links, /networks) and CommandHandler
+- [x] 06-04-PLAN.md — /report-bug slash command wiring WorkflowOrchestrator to ForumPoster
+- [x] 06-05-PLAN.md — Bot entry point, WorkflowOrchestrator Discord wiring, agent config updates
 
 **Success Criteria** (what must be TRUE):
   1. Discord bot connects and responds to slash commands
@@ -165,9 +166,27 @@ Plans:
   7. Bot has rate limiting to prevent abuse
   8. Agent prompts updated to describe Discord features
 
+### Phase 6.1: MCP Server for Discord Posting (INSERTED)
+**Goal**: Enable Claude agents to post diagnostic reports to Discord without exposing bot credentials
+**Depends on**: Phase 6
+**Requirements**: Architectural fix - WorkflowOrchestrator.postToDiscord() requires bot token, can't be distributed publicly
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run /gsd:discuss-phase 6.1 to gather context, then /gsd:plan-phase 6.1 to break down)
+
+**Success Criteria** (what must be TRUE):
+  1. MCP server provides secure Discord posting capability
+  2. Claude agents can post reports without bot token in their environment
+  3. Authentication/authorization prevents abuse
+  4. MIDL team controls bot credentials server-side
+  5. Public developers can use agent with Discord posting out of the box
+  6. Agent discovery of MCP server is seamless
+  7. WorkflowOrchestrator uses MCP for Discord posting instead of direct bot token
+
 ### Phase 7: Packaging & Distribution
 **Goal**: A developer can discover, install, and configure the agent from the GitHub repository alone
-**Depends on**: Phase 6
+**Depends on**: Phase 6.1
 **Requirements**: PKG-01, PKG-02, PKG-03, PKG-04, PKG-05, PKG-06, PKG-07, PKG-08, PKG-09
 **Success Criteria** (what must be TRUE):
   1. README explains what the agent does and how to install it in Claude Code
@@ -184,7 +203,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5 -> 6 -> 7
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5 -> 6 -> 6.1 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -196,4 +215,5 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
 | 5. Remove GitHub Integration | 3/3 | ✓ Complete | 2026-02-02 |
 | 6. Discord Integration | 5/5 | ✓ Complete | 2026-02-02 |
+| 6.1. MCP Server for Discord Posting (INSERTED) | 0/? | Not started | - |
 | 7. Packaging & Distribution | 0/2 | Not started | - |
