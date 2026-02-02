@@ -69,6 +69,11 @@ export class DiscordClient {
     return this.config;
   }
 
+  /** Expose underlying Client event listener for bot event handling */
+  on(event: string, listener: (...args: unknown[]) => void): void {
+    this.client.on(event, listener);
+  }
+
   private checkRateLimit(): void {
     const now = Date.now();
     const windowStart = now - this.rateLimitConfig.cooldownMs;

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "bot": "npx tsx src/discord/bot.ts"
   },
   "keywords": [],
   "author": "",
