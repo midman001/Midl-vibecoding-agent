@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-01)
 
 **Core value:** Vibecoders get instant, expert MIDL SDK assistance with comprehensive diagnostic reports--resolving issues in minutes instead of days.
-**Current focus:** Phase 6 - Discord Integration (in progress)
+**Current focus:** Phase 6 - Discord Integration (complete)
 
 ## Current Position
 
 Phase: 6 of 7 (Discord Integration)
-Plan: 4 of 5 in phase
-Status: In progress
-Last activity: 2026-02-02 - Completed 06-04-PLAN.md
+Plan: 5 of 5 in phase
+Status: Phase complete
+Last activity: 2026-02-02 - Completed 06-05-PLAN.md
 
-Progress: [######################-] 88% (21/24 total plans complete)
+Progress: [#######################] 92% (22/24 total plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
+- Total plans completed: 22
 - Average duration: 2.7 min
-- Total execution time: 57 min
+- Total execution time: 60 min
 
 **By Phase:**
 
@@ -34,10 +34,10 @@ Progress: [######################-] 88% (21/24 total plans complete)
 | 02.1-attachment-content-extraction | 2 | 5 min | 2.5 min |
 | 02.2-enhanced-solution-prioritization | 3 | 8 min | 2.7 min |
 | 05-remove-github-integration | 3 | 5 min | 1.7 min |
-| 06-discord-integration | 4 | 12 min | 3 min |
+| 06-discord-integration | 5 | 15 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-03 (2 min), 06-01 (3 min), 06-02 (3 min), 06-03 (3 min), 06-04 (3 min)
+- Last 5 plans: 06-01 (3 min), 06-02 (3 min), 06-03 (3 min), 06-04 (3 min), 06-05 (3 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -98,6 +98,9 @@ Recent decisions affecting current work:
 - Error handler checks replied/deferred state before responding (06-03)
 - Factory function createReportBugCommand(orchestrator, forumPoster) for DI consistency (06-04)
 - Filename constructed in report-bug.ts, not from WorkflowResult which lacks filename (06-04)
+- Bot entry point returns cleanup function for testability and graceful shutdown (06-05)
+- DiscordClient.on() method added to expose underlying Client events (06-05)
+- postToDiscord catches Discord API errors and returns null, lets config errors propagate (06-05)
 
 ### Roadmap Evolution
 
@@ -117,5 +120,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-02
-Stopped at: Completed 06-04-PLAN.md (/report-bug slash command)
+Stopped at: Completed 06-05-PLAN.md (bot entry point and integration - Phase 6 complete)
 Resume file: None
