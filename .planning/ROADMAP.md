@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Solution Extraction & User Flow** - Present solutions and integrate with bug report workflow
 - [x] **Phase 4: Testing** - Unit and integration tests with >85% coverage
 - [x] **Phase 5: Remove GitHub Integration** - Segregate and disable GitHub features, keep diagnostic reports
-- [ ] **Phase 6: Discord Integration** - TBD
+- [ ] **Phase 6: Discord Integration** - Discord bot with slash commands, forum posting, and dev resource commands
 - [ ] **Phase 7: Packaging & Distribution** - README, examples, and installation guide for public release
 
 ## Phase Details
@@ -129,9 +129,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Move GitHub-dependent files to legacy/ directories and gitignore
-- [ ] 05-02-PLAN.md — Rewrite WorkflowOrchestrator to diagnostic-only with updated tests
-- [ ] 05-03-PLAN.md — Update agent prompts and configuration to remove GitHub references
+- [x] 05-01-PLAN.md — Move GitHub-dependent files to legacy/ directories and gitignore
+- [x] 05-02-PLAN.md — Rewrite WorkflowOrchestrator to diagnostic-only with updated tests
+- [x] 05-03-PLAN.md — Update agent prompts and configuration to remove GitHub references
 
 **Success Criteria** (what must be TRUE):
   1. GitHub search, duplicate detection, and scoring features are disabled
@@ -143,16 +143,27 @@ Plans:
   7. Tests updated to reflect new architecture
 
 ### Phase 6: Discord Integration
-**Goal**: TBD (will use /gsd:discuss-phase to define)
+**Goal**: Two-way Discord integration with bot slash commands for dev resources and diagnostic report posting to forum channel
 **Depends on**: Phase 5
-**Requirements**: TBD
-**Plans**: TBD
+**Requirements**: Phase 6 context discussion decisions
+**Plans**: 5 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 6 to break down)
+- [ ] 06-01-PLAN.md — Discord.js setup, DiscordClient wrapper, config types, .env.example
+- [ ] 06-02-PLAN.md — ForumPoster class for posting diagnostic reports to forum threads
+- [ ] 06-03-PLAN.md — Utility slash commands (/help, /status, /links, /networks) and CommandHandler
+- [ ] 06-04-PLAN.md — /report-bug slash command wiring WorkflowOrchestrator to ForumPoster
+- [ ] 06-05-PLAN.md — Bot entry point, WorkflowOrchestrator Discord wiring, agent config updates
 
 **Success Criteria** (what must be TRUE):
-  1. TBD
+  1. Discord bot connects and responds to slash commands
+  2. /report-bug generates diagnostic report and posts to forum channel as new thread
+  3. /help, /status, /links, /networks provide useful MIDL dev resources via rich embeds
+  4. All slash command responses are ephemeral (private to invoking user)
+  5. Forum threads include friendly summary message and .md file attachment
+  6. WorkflowOrchestrator can optionally post reports to Discord
+  7. Bot has rate limiting to prevent abuse
+  8. Agent prompts updated to describe Discord features
 
 ### Phase 7: Packaging & Distribution
 **Goal**: A developer can discover, install, and configure the agent from the GitHub repository alone
@@ -184,5 +195,5 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. Solution Extraction & User Flow | 3/3 | ✓ Complete | 2026-02-01 |
 | 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
 | 5. Remove GitHub Integration | 3/3 | ✓ Complete | 2026-02-02 |
-| 6. Discord Integration | 0/? | Not started | - |
+| 6. Discord Integration | 0/5 | Not started | - |
 | 7. Packaging & Distribution | 0/2 | Not started | - |
