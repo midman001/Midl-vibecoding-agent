@@ -126,10 +126,12 @@ Plans:
 **Goal**: Segregate GitHub-specific code and disable duplicate detection/issue creation features while preserving diagnostic report generation
 **Depends on**: Phase 4
 **Requirements**: Architectural pivot - focus on diagnostic reports without GitHub integration
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 5 to break down)
+- [ ] 05-01-PLAN.md — Move GitHub-dependent files to legacy/ directories and gitignore
+- [ ] 05-02-PLAN.md — Rewrite WorkflowOrchestrator to diagnostic-only with updated tests
+- [ ] 05-03-PLAN.md — Update agent prompts and configuration to remove GitHub references
 
 **Success Criteria** (what must be TRUE):
   1. GitHub search, duplicate detection, and scoring features are disabled
