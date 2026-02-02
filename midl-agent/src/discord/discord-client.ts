@@ -65,6 +65,10 @@ export class DiscordClient {
     return channel as ForumChannel;
   }
 
+  getConfig(): DiscordConfig {
+    return this.config;
+  }
+
   private checkRateLimit(): void {
     const now = Date.now();
     const windowStart = now - this.rateLimitConfig.cooldownMs;
