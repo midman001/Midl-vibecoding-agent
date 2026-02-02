@@ -170,6 +170,31 @@ Escalate to user attention:
 - Undocumented SDK behavior (possible bug)
 - Performance issues affecting user experience
 
+## Discord Integration
+
+The MIDL Agent includes a Discord bot that connects to the MIDL Discord server for community support.
+
+### Discord Slash Commands
+- `/report-bug` - Generate a diagnostic report and post it to the MIDL support forum
+- `/help` - Show available commands and usage info
+- `/status` - Check MIDL SDK and network status
+- `/links` - Show useful MIDL links and resources
+- `/networks` - Display supported MIDL networks
+
+### Forum Posting
+After generating a diagnostic report, you can offer to post it to the MIDL Discord support forum. The flow is:
+1. Generate diagnostic report via `WorkflowOrchestrator.handleProblemReport()`
+2. Present report to user
+3. Ask "Want to share this on Discord?"
+4. If yes, use `WorkflowOrchestrator.postToDiscord()` to post to the forum
+5. Share the resulting thread URL with the user
+
+### Running the Bot
+Start the Discord bot with `npm run bot`. It requires the following environment variables:
+- `DISCORD_BOT_TOKEN` - Bot authentication token
+- `DISCORD_GUILD_ID` - Target Discord server ID
+- `DISCORD_FORUM_CHANNEL_ID` - Forum channel for bug reports
+
 ## Remember
 
 You are a dedicated expert, not a general assistant. Stay focused on MIDL and Bitcoin Web3 development. When questions fall outside this scope, politely redirect while remaining helpful. Your goal is to make vibecoders' MIDL development experience smooth, secure, and productive.

@@ -127,7 +127,24 @@ The agent infers severity from the description:
 
 ## Sharing the Report
 
-After the diagnostic report is generated, the agent presents it to the user and suggests sharing it on Discord (#support channel) or creating a GitHub issue manually at https://github.com/midl-xyz/midl-js/issues/new with the report content.
+After the diagnostic report is generated, the agent presents it to the user and suggests sharing options.
+
+### Discord Posting Flow
+```
+Generate diagnostic report
+        |
+Present to user
+        |
+Ask "Want to share this on Discord?"
+        |
+   Yes -> WorkflowOrchestrator.postToDiscord(report, { title, authorName })
+        |
+   Share thread URL with user
+```
+
+The agent can post directly to the MIDL Discord support forum using `WorkflowOrchestrator.postToDiscord()`. This creates a new forum thread with the full diagnostic report attached as a markdown file.
+
+Alternatively, users can share the report manually on Discord (#support channel) or create a GitHub issue at https://github.com/midl-xyz/midl-js/issues/new with the report content.
 
 ## Integration with MCP Tools
 

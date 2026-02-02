@@ -28,6 +28,11 @@
       "description": "Manage and use installed MIDL MCPs",
       "keywords": ["mcp", "model context protocol"],
       "action": "manage_mcp_tools"
+    },
+    "discord": {
+      "description": "Manage Discord bot and forum posting",
+      "keywords": ["discord", "post", "share", "forum"],
+      "action": "manage_discord"
     }
   },
   "capabilities": [
@@ -37,6 +42,7 @@
     "TypeScript support and type safety",
     "MIDL protocol interaction",
     "Diagnostic report generation for bug reports",
+    "Discord bot with slash commands and forum posting",
     "MCP server discovery and utilization",
     "Code generation and examples",
     "Performance optimization suggestions",
@@ -63,6 +69,7 @@
     "diagnosticReports": true,
     "mcpIntegration": true,
     "codeGeneration": true,
-    "performanceTips": true
+    "performanceTips": true,
+    "discordIntegration": true
   }
 }
