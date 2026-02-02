@@ -4,17 +4,17 @@
 
 See: .planning/PROJECT.md (updated 2026-02-01)
 
-**Core value:** Vibecoders get instant, expert MIDL SDK assistance with automatic duplicate detection--resolving issues in minutes instead of days while reducing noise for the MIDL team.
-**Current focus:** Phase 2.2 - Enhanced Solution Prioritization and Detailed Bug Reports (complete)
+**Core value:** Vibecoders get instant, expert MIDL SDK assistance with comprehensive diagnostic reports--resolving issues in minutes instead of days.
+**Current focus:** Phase 5 - Remove GitHub Integration (next up)
 
 ## Current Position
 
-Phase: 2.2 of 5 (Enhanced Solution Prioritization and Detailed Bug Reports)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-02-01 - Completed 02.2-03-PLAN.md
+Phase: 4 of 7 (Testing - Complete, Phase 5 next)
+Plan: All prior phases complete
+Status: Ready for Phase 5 (Remove GitHub Integration)
+Last activity: 2026-02-02 - Roadmap restructured
 
-Progress: [#############] 100%
+Progress: [#############-----] 57% (4/7 phases complete)
 
 ## Performance Metrics
 
@@ -85,6 +85,8 @@ Recent decisions affecting current work:
 
 - Phase 2.1 inserted after Phase 2: Attachment Content Extraction (URGENT) - Testing discovered that issues with detailed error reports in attachments were not being detected as duplicates because similarity scoring only used issue title and body text, missing critical context from attached markdown files
 - Phase 2.2 inserted after Phase 2.1: Enhanced Solution Prioritization and Detailed Bug Reports (URGENT) - User requirement: (1) Prioritize official team fixes over community suggestions, clearly indicate source; (2) Generate comprehensive .md diagnostic reports with full context (environment, steps taken, fixes attempted, suggestions) and attach to new GitHub issues
+- Phase 4.1 inserted after Phase 4: Fix GitHub Search OR Logic (URGENT) - Real-world testing revealed search uses AND logic, preventing duplicate detection when issue titles lack all search terms (e.g., Issue #2 "Xverse and BIP322" not found when searching "executor-react unknown letter xverse bip" because title doesn't contain all terms)
+- **2026-02-02: Major architectural pivot** - Phase 4.1 removed. GitHub integration features (search, duplicate detection, issue creation) being removed in new Phase 5. Focus shifting to diagnostic reports only. Discord integration planned for Phase 6. Original Phase 5 (Packaging) moved to Phase 7.
 
 ### Pending Todos
 

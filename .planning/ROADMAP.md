@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roadmap delivers GitHub issue search integration into the existing MIDL agent, then packages it for distribution. We start by building the GitHub API foundation, layer search and duplicate detection on top, wire the user-facing flow into the existing bug report workflow, validate everything with tests, and finish with packaging for public distribution.
+This roadmap delivers diagnostic report generation and community integration for the MIDL agent. Phase 5 removes GitHub integration features while preserving diagnostic report capabilities. Phase 6 adds Discord integration. Phase 7 packages everything for distribution.
 
 ## Phases
 
@@ -15,10 +15,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: GitHub API Foundation** - Authenticated GitHub client with rate limiting
 - [x] **Phase 2: Search & Duplicate Detection** - Core search, similarity scoring, and duplicate flagging
 - [x] **Phase 2.1: Attachment Content Extraction** (INSERTED) - Fetch and analyze issue attachments for accurate duplicate detection
-- [ ] **Phase 2.2: Enhanced Solution Prioritization and Detailed Bug Reports** (INSERTED) - Prioritize official team solutions and generate comprehensive diagnostic reports
+- [x] **Phase 2.2: Enhanced Solution Prioritization and Detailed Bug Reports** (INSERTED) - Prioritize official team solutions and generate comprehensive diagnostic reports
 - [x] **Phase 3: Solution Extraction & User Flow** - Present solutions and integrate with bug report workflow
 - [x] **Phase 4: Testing** - Unit and integration tests with >85% coverage
-- [ ] **Phase 5: Packaging & Distribution** - README, examples, and installation guide for public release
+- [ ] **Phase 5: Remove GitHub Integration** - Segregate and disable GitHub features, keep diagnostic reports
+- [ ] **Phase 6: Discord Integration** - TBD
+- [ ] **Phase 7: Packaging & Distribution** - README, examples, and installation guide for public release
 
 ## Phase Details
 
@@ -120,26 +122,56 @@ Plans:
 - [x] 04-01-PLAN.md — Unit tests for term-extractor, search-config, fix-implementer + coverage config
 - [x] 04-02-PLAN.md — Integration tests for workflow-orchestrator + timeout/rate-limit/duplicate-accuracy edge cases
 
-### Phase 5: Packaging & Distribution
-**Goal**: A developer can discover, install, and configure the agent from the GitHub repository alone
+### Phase 5: Remove GitHub Integration
+**Goal**: Segregate GitHub-specific code and disable duplicate detection/issue creation features while preserving diagnostic report generation
 **Depends on**: Phase 4
+**Requirements**: Architectural pivot - focus on diagnostic reports without GitHub integration
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 5 to break down)
+
+**Success Criteria** (what must be TRUE):
+  1. GitHub search, duplicate detection, and scoring features are disabled
+  2. GitHub issue creation and pushing features are disabled
+  3. GitHub-related files moved to legacy/ directory and added to .gitignore
+  4. DiagnosticReportGenerator still works and shows reports to user
+  5. WorkflowOrchestrator simplified to only generate and display diagnostic reports
+  6. All agent prompts updated to remove GitHub feature mentions
+  7. Tests updated to reflect new architecture
+
+### Phase 6: Discord Integration
+**Goal**: TBD (will use /gsd:discuss-phase to define)
+**Depends on**: Phase 5
+**Requirements**: TBD
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 6 to break down)
+
+**Success Criteria** (what must be TRUE):
+  1. TBD
+
+### Phase 7: Packaging & Distribution
+**Goal**: A developer can discover, install, and configure the agent from the GitHub repository alone
+**Depends on**: Phase 6
 **Requirements**: PKG-01, PKG-02, PKG-03, PKG-04, PKG-05, PKG-06, PKG-07, PKG-08, PKG-09
 **Success Criteria** (what must be TRUE):
-  1. README explains what the agent does, how to install it in Claude Code, and how to configure the GitHub token
-  2. .env.example and search-config.json example files exist with documented defaults
-  3. At least two example conversation scenarios show the search feature in action
-  4. Troubleshooting guide covers common issues (auth failure, rate limits, no results)
+  1. README explains what the agent does and how to install it in Claude Code
+  2. .env.example and config example files exist with documented defaults
+  3. At least two example conversation scenarios show the diagnostic report feature in action
+  4. Troubleshooting guide covers common issues
   5. LICENSE and CONTRIBUTING files are present
 **Plans**: TBD
 
 Plans:
-- [ ] 05-01: README, installation guide, and config examples
-- [ ] 05-02: Usage examples, troubleshooting, and contribution docs
+- [ ] 07-01: README, installation guide, and config examples
+- [ ] 07-02: Usage examples, troubleshooting, and contribution docs
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -149,4 +181,6 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5
 | 2.2. Enhanced Solution Prioritization and Detailed Bug Reports (INSERTED) | 3/3 | ✓ Complete | 2026-02-01 |
 | 3. Solution Extraction & User Flow | 3/3 | ✓ Complete | 2026-02-01 |
 | 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
-| 5. Packaging & Distribution | 0/2 | Not started | - |
+| 5. Remove GitHub Integration | 0/? | Not started | - |
+| 6. Discord Integration | 0/? | Not started | - |
+| 7. Packaging & Distribution | 0/2 | Not started | - |
