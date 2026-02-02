@@ -1,8 +1,8 @@
 # MIDL Bug Report Workflow
 
-## Search-First, Context-Aware Flow
+## Diagnostic-Report Flow
 
-When a user reports an issue, the agent uses `WorkflowOrchestrator` to handle the entire flow automatically. The goal is **1-2 user interactions**, not an interview.
+When a user reports an issue, the agent uses `WorkflowOrchestrator` to generate a comprehensive diagnostic report automatically. The goal is **1-2 user interactions**, not an interview.
 
 ### How It Works
 
@@ -11,21 +11,15 @@ User describes problem
         ↓
 WorkflowOrchestrator.handleProblemReport()
         ↓
-┌─ Search GitHub for duplicates (DuplicateDetector)
-│   ↓
-├─ Fetch comments from top matching issues
-│   ↓
-├─ Extract solutions (SolutionExtractor)
-│   ↓
-├─ Score applicability to user's context (ApplicabilityScorer)
-│   ↓
-├─ Solutions found?
-│   ├── YES → Present solutions conversationally
-│   │         ├── "Want me to implement this fix?" → FixImplementer
-│   │         ├── "Show me how" → Code example
-│   │         └── "That's not my issue" → Draft bug report
-│   └── NO  → Auto-generate bug report draft
-│             └── "Does this look right?" → Submit or edit
+┌─ Extract context from description (error messages, SDK version, network, methods)
+│       ↓
+├─ Generate BugReportDraft (BugReportGenerator)
+│       ↓
+├─ Generate DiagnosticReport (DiagnosticReportGenerator)
+│       ↓
+├─ Present to user
+        ↓
+"Here's a diagnostic report. Share it on Discord or GitHub."
 ```
 
 ### Context Extraction
@@ -41,20 +35,9 @@ The agent extracts information from the user's natural language description rath
 
 If critical information is missing from the description, the agent may ask **one** follow-up question. Never more than that.
 
-### Implementation Assistance (Decision 5)
-
-When a solution is found and the user says "Yes, implement it":
-
-1. `FixImplementer.locateAndPrepareFix()` searches the user's project for relevant code
-2. Shows a diff of the proposed change
-3. Explains **why** the fix works
-4. Only applies the change after explicit user confirmation via `FixImplementer.applyFix()`
-
-**Scope**: Single-file, 1-2 line fixes only. No multi-file refactoring.
-
 ## Bug Report Template
 
-When no solution helps, the agent auto-generates a report using `BugReportGenerator`:
+The agent auto-generates a report using `BugReportGenerator`:
 
 ```markdown
 ---
@@ -142,14 +125,9 @@ The agent infers severity from the description:
 - Edge case behavior
 - Developer experience issue
 
-## Submission
+## Sharing the Report
 
-After the user approves the draft:
-
-1. **With write token**: `IssueCreator.createFromDraft()` creates the GitHub issue directly and returns the URL
-2. **Without write token**: `BugReportGenerator.formatAsGitHubLink()` generates a pre-filled GitHub issue URL for the user to click
-
-The agent always provides the direct link to the created or pre-filled issue.
+After the diagnostic report is generated, the agent presents it to the user and suggests sharing it on Discord (#support channel) or creating a GitHub issue manually at https://github.com/midl-xyz/midl-js/issues/new with the report content.
 
 ## Integration with MCP Tools
 
