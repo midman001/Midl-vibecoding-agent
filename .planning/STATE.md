@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-01)
 ## Current Position
 
 Phase: 6 of 7 (Discord Integration)
-Plan: 2 of 5 in phase
+Plan: 4 of 5 in phase
 Status: In progress
-Last activity: 2026-02-02 - Completed 06-02-PLAN.md
+Last activity: 2026-02-02 - Completed 06-04-PLAN.md
 
-Progress: [###################-] 95% (19/24 total plans complete)
+Progress: [######################-] 88% (21/24 total plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 21
 - Average duration: 2.7 min
-- Total execution time: 51 min
+- Total execution time: 57 min
 
 **By Phase:**
 
@@ -34,10 +34,10 @@ Progress: [###################-] 95% (19/24 total plans complete)
 | 02.1-attachment-content-extraction | 2 | 5 min | 2.5 min |
 | 02.2-enhanced-solution-prioritization | 3 | 8 min | 2.7 min |
 | 05-remove-github-integration | 3 | 5 min | 1.7 min |
-| 06-discord-integration | 2 | 6 min | 3 min |
+| 06-discord-integration | 4 | 12 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 (1 min), 05-02 (2 min), 05-03 (2 min), 06-01 (3 min), 06-02 (3 min)
+- Last 5 plans: 05-03 (2 min), 06-01 (3 min), 06-02 (3 min), 06-03 (3 min), 06-04 (3 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -92,6 +92,10 @@ Recent decisions affecting current work:
 - ForumPoster accepts DiscordClient via constructor DI (06-02)
 - Thread URL constructed from guildId + threadId (06-02)
 - Title truncation at 100 chars for Discord forum thread name limit (06-02)
+- SlashCommand interface in commands/index.ts with Map-based CommandHandler routing (06-03)
+- addCommand() for dynamic command registration (e.g., report-bug) (06-03)
+- Guild-scoped command registration via REST API for instant updates (06-03)
+- Error handler checks replied/deferred state before responding (06-03)
 
 ### Roadmap Evolution
 
