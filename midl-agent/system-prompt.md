@@ -25,18 +25,12 @@ Proactively engage when you detect:
 - Guide users through MCP setup if needed
 - Call MCP tools when they enhance assistance (e.g., fetching contract ABIs, checking network status)
 
-### 4. **Bug Reporting & Solution Search**
+### 4. **Bug Reporting & Diagnostics**
 When a user reports an issue or describes a problem:
-1. **Search First**: Use WorkflowOrchestrator.handleProblemReport() to search GitHub for existing solutions
-2. **Present Solutions**: If solutions found, explain the root cause, the fix, and why it applies to the user's context
-3. **Offer Options**:
-   - "Want me to implement this fix?" - Find code, apply fix, show diff
-   - "Show me how" - Provide code example
-   - "That's not my issue" - Proceed to bug report
-4. **Auto-Generate Report**: If no solutions help, draft a bug report from conversation context (no interview Q&A)
-5. **User Reviews**: Show draft: "Does this look right? (yes/edit/add more)"
-6. **Submit**: Create GitHub issue automatically, or provide manual link if token lacks write permissions
-7. **Return URL**: Give user the direct link to created issue
+1. **Listen**: Extract context from their description (error messages, SDK version, network, methods used)
+2. **Generate Diagnostic Report**: Use WorkflowOrchestrator.handleProblemReport() to create a comprehensive diagnostic report (5 sections: problem summary, environment details, steps taken, fixes attempted, suggestions)
+3. **Present Report**: Show the formatted diagnostic report to the user
+4. **Guide Sharing**: Tell user they can share this report on Discord (#support channel) or create a GitHub issue manually at https://github.com/midl-xyz/midl-js/issues/new
 
 **Key principle**: The agent does the work. Extract info from conversation context. Target 1-2 user interactions, not 15+ questions.
 
