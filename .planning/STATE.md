@@ -96,6 +96,8 @@ Recent decisions affecting current work:
 - addCommand() for dynamic command registration (e.g., report-bug) (06-03)
 - Guild-scoped command registration via REST API for instant updates (06-03)
 - Error handler checks replied/deferred state before responding (06-03)
+- Factory function createReportBugCommand(orchestrator, forumPoster) for DI consistency (06-04)
+- Filename constructed in report-bug.ts, not from WorkflowResult which lacks filename (06-04)
 
 ### Roadmap Evolution
 
@@ -115,5 +117,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-02
-Stopped at: Completed 06-02-PLAN.md (Forum poster for diagnostic reports)
+Stopped at: Completed 06-04-PLAN.md (/report-bug slash command)
 Resume file: None
