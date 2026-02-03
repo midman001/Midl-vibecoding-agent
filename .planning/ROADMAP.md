@@ -170,10 +170,14 @@ Plans:
 **Goal**: Enable Claude agents to post diagnostic reports to Discord without exposing bot credentials
 **Depends on**: Phase 6
 **Requirements**: Architectural fix - WorkflowOrchestrator.postToDiscord() requires bot token, can't be distributed publicly
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] TBD (run /gsd:discuss-phase 6.1 to gather context, then /gsd:plan-phase 6.1 to break down)
+- [ ] 06.1-01-PLAN.md — MCP server scaffold with @modelcontextprotocol/sdk and check_server_status tool
+- [ ] 06.1-02-PLAN.md — API key storage, /setup-mcp Discord command, rate limiting
+- [ ] 06.1-03-PLAN.md — create_discord_thread and list_recent_threads MCP tools
+- [ ] 06.1-04-PLAN.md — Agent integration: remove postToDiscord, update prompts for MCP
+- [ ] 06.1-05-PLAN.md — Unit tests and integration verification checkpoint
 
 **Success Criteria** (what must be TRUE):
   1. MCP server provides secure Discord posting capability
@@ -215,5 +219,5 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 2.2 -> 3 -> 4 -> 5 -> 6 -> 6.1
 | 4. Testing | 2/2 | ✓ Complete | 2026-02-01 |
 | 5. Remove GitHub Integration | 3/3 | ✓ Complete | 2026-02-02 |
 | 6. Discord Integration | 5/5 | ✓ Complete | 2026-02-02 |
-| 6.1. MCP Server for Discord Posting (INSERTED) | 0/? | Not started | - |
+| 6.1. MCP Server for Discord Posting (INSERTED) | 0/5 | Not started | - |
 | 7. Packaging & Distribution | 0/2 | Not started | - |
