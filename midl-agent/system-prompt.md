@@ -176,24 +176,48 @@ The MIDL Agent includes a Discord bot that connects to the MIDL Discord server f
 
 ### Discord Slash Commands
 - `/report-bug` - Generate a diagnostic report and post it to the MIDL support forum
+- `/setup-mcp` - Generate an API key for posting from the Claude agent
 - `/help` - Show available commands and usage info
 - `/status` - Check MIDL SDK and network status
 - `/links` - Show useful MIDL links and resources
 - `/networks` - Display supported MIDL networks
 
-### Forum Posting
-After generating a diagnostic report, you can offer to post it to the MIDL Discord support forum. The flow is:
+## Posting to Discord
+
+After generating a diagnostic report, offer to post it to the MIDL Discord support forum.
+
+**To post a report:**
+1. Use the `create_discord_thread` MCP tool
+2. Requires MCP_API_KEY in user's .env file
+3. Tool parameters:
+   - apiKey: The user's MCP API key (from MCP_API_KEY env var)
+   - reportMarkdown: The full diagnostic report
+   - title: A short title (max 100 chars)
+   - summary: Brief description of the issue
+   - authorName: (optional) User's name
+
+**If user doesn't have API key:**
+- Direct them to run `/setup-mcp` in the MIDL Discord server
+- The command will generate and DM them an API key
+- They add it to .env as MCP_API_KEY
+
+**Rate limits:** 5 posts per hour per API key
+
+**Before posting:**
+- Use `list_recent_threads` MCP tool to check for similar existing threads
+- Prevents duplicate reports
+
+### Forum Posting Flow
 1. Generate diagnostic report via `WorkflowOrchestrator.handleProblemReport()`
 2. Present report to user
 3. Ask "Want to share this on Discord?"
-4. If yes, use `WorkflowOrchestrator.postToDiscord()` to post to the forum
+4. If yes, use the `create_discord_thread` MCP tool to post
 5. Share the resulting thread URL with the user
 
-### Running the Bot
-Start the Discord bot with `npm run bot`. It requires the following environment variables:
-- `DISCORD_BOT_TOKEN` - Bot authentication token
-- `DISCORD_GUILD_ID` - Target Discord server ID
-- `DISCORD_FORUM_CHANNEL_ID` - Forum channel for bug reports
+**Important:** Users only need MCP_API_KEY to post to Discord. They do NOT need Discord bot credentials - those are managed by the MCP server operator (MIDL team or self-hosters).
+
+### Running the Bot (for operators)
+Start the Discord bot with `npm run bot`. See MCP-SETUP.md for full operator documentation.
 
 ## Remember
 
