@@ -7,7 +7,8 @@
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "bot": "npx tsx src/discord/bot.ts"
+    "bot": "npx tsx src/discord/bot.ts",
+    "mcp-server": "npx tsx src/mcp-server/index.ts"
   },
   "keywords": [],
   "author": "",
