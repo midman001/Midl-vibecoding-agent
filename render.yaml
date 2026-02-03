@@ -1,0 +1,36 @@
+# Render Blueprint for MIDL Agent Bundle
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: midl-agent
+    runtime: node
+    plan: starter  # $7/month, always-on (no sleep)
+    region: oregon  # or closest to your users
+
+    # Build configuration
+    rootDir: midl-agent
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+
+    # Health check for Render monitoring
+    healthCheckPath: /health
+
+    # Environment variables (values set via Render Dashboard)
+    envVars:
+      # Discord Bot Configuration
+      - key: DISCORD_BOT_TOKEN
+        sync: false  # Must be set manually in dashboard (secret)
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_GUILD_ID
+        sync: false
+      - key: DISCORD_FORUM_CHANNEL_ID
+        sync: false
+
+      # MCP Server Configuration
+      - key: MCP_ALLOWED_ORIGINS
+        sync: false  # Production origins, set in dashboard
+
+      # Render provides PORT automatically
+      # No need to set PORT - Render injects it
