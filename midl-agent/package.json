@@ -8,7 +8,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "bot": "npx tsx src/discord/bot.ts",
-    "mcp-server": "npx tsx src/mcp-server/index.ts"
+    "mcp-server": "npx tsx src/mcp-server/index.ts",
+    "mcp-server:http": "MCP_TRANSPORT=http npx tsx src/mcp-server/index.ts"
   },
   "keywords": [],
   "author": "",
