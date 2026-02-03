@@ -2,68 +2,52 @@
 
 Common issues and solutions for MIDL Agent.
 
-## Installation Issues
+## Connection Issues
 
-### "Cannot find module" errors
+### "Failed to connect to MCP server"
 
-**Problem:** Module not found when starting.
+**Problem:** Claude Code can't connect to the hosted MCP server.
 
-**Solution:**
-```bash
-cd midl-agent
-npm install
+**Solutions:**
+1. Verify your API key is valid (run `/setup-mcp` in Discord to get a new one)
+2. Check that the Authorization header has `Bearer ` prefix (note the space)
+3. Ensure the URL is exactly `https://midl-agent.onrender.com/mcp`
+
+**Check your settings:**
+```json
+{
+  "mcpServers": {
+    "midl-discord": {
+      "type": "url",
+      "url": "https://midl-agent.onrender.com/mcp",
+      "headers": {
+        "Authorization": "Bearer midl_your_key_here"
+      }
+    }
+  }
+}
 ```
-
-### "Missing required environment variables"
-
-**Problem:** MCP server fails to start with missing variables.
-
-**Solution:** Ensure `.env` file exists with your API key:
-```bash
-cp .env.example .env
-# Edit .env and add your MCP_API_KEY
-```
-
-```
-MCP_API_KEY=midl_your_key_here
-```
-
-## MCP Server Issues
 
 ### "Invalid API key"
 
 **Problem:** MCP tools return "Invalid API key" error.
 
 **Causes:**
-1. API key not set in `.env`
-2. Typo in the API key
+1. API key not in Authorization header
+2. Missing `Bearer ` prefix
+3. Typo in the API key
 
 **Solutions:**
 1. Get a new key by running `/setup-mcp` in the [MIDL Discord](https://discord.com/invite/midl)
-2. Copy the full key including the `midl_` prefix
-
-### "MCP server not connecting"
-
-**Problem:** Claude Code can't connect to MCP server.
-
-**Check:**
-1. Is the `cwd` path in settings.json correct?
-2. Did `npm install` complete successfully?
-3. Is Node.js >= 18 installed?
-
-**Debug:** Try running the MCP server manually:
-```bash
-cd midl-agent
-npm run mcp-server
-```
-
-You should see: `MIDL MCP Server running on stdio`
+2. API keys start with `midl_` prefix
+3. Keys are single-use credentials tied to your Discord account
+4. Ensure the header format is `Bearer YOUR_KEY` (with a space after Bearer)
 
 ### "Rate limit exceeded"
 
 **Problem:** Cannot post to Discord - rate limit error.
 
-**Solution:** Wait for the rate limit to reset (1 hour). Each API key allows 5 posts per hour.
+**Solution:** Wait for the rate limit to reset. Each API key allows 5 posts per hour.
 
 **Check your remaining posts:**
 Use the `check_server_status` MCP tool.
@@ -72,29 +56,23 @@ Use the `check_server_status` MCP tool.
 
 ### MCP server not showing in Claude Code
 
-**Problem:** The `midl-discord-poster` server doesn't appear.
+**Problem:** The `midl-discord` server doesn't appear.
 
-**Check your settings.json:**
-```json
-{
-  "mcpServers": {
-    "midl-discord-poster": {
-      "command": "npx",
-      "args": ["tsx", "src/mcp-server/index.ts"],
-      "cwd": "/absolute/path/to/midl-agent"
-    }
-  }
-}
-```
+**Check your MCP settings:**
+1. Open Claude Code settings
+2. Look for `mcpServers` section
+3. Verify `midl-discord` entry exists with `type: "url"`
 
 **Common issues:**
-1. Path must be absolute, not relative
-2. Path must point to `midl-agent` directory, not root
-3. Restart Claude Code after changing settings
+1. JSON syntax errors in settings file
+2. Missing `type: "url"` (required for HTTP servers)
+3. Missing `headers` object with Authorization
+
+**After fixing:** Restart Claude Code completely (quit and reopen).
 
 ### Tools not working after settings change
 
-**Problem:** MCP tools don't work after updating settings.json.
+**Problem:** MCP tools don't work after updating settings.
 
 **Solution:** Restart Claude Code completely (quit and reopen).
 
@@ -103,5 +81,4 @@ Use the `check_server_status` MCP tool.
 If these solutions don't work, ask in the [MIDL Discord](https://discord.com/invite/midl) with:
 - Full error message
 - Steps to reproduce
-- Node version (`node --version`)
 - OS (Windows/Mac/Linux)
