@@ -12,6 +12,13 @@ dist/
 midl-agent/src/search/legacy/
 midl-agent/src/types/legacy/
 
+# Server infrastructure (private deployment only)
+# These files are deployed via private repo, not distributed publicly
+midl-agent/src/discord/
+midl-agent/src/mcp-server/
+midl-agent/src/combined.ts
+render.yaml
+
 # Internal development files
 .planning/
 .claude/
