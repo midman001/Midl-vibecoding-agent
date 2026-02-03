@@ -25,6 +25,7 @@ export class McpDiscordServer {
   private forumPoster: ForumPoster | null = null;
   private config: McpServerConfig;
   private apiKeyStore: ApiKeyStore;
+  private isStdioConnected = false;
 
   constructor(deps: McpDiscordServerDeps) {
     this.config = deps.config;
@@ -314,7 +315,15 @@ export class McpDiscordServer {
   async start(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.mcpServer.connect(transport);
+    this.isStdioConnected = true;
     console.error("MIDL MCP Server running on stdio");
+  }
+
+  /**
+   * Check if running in HTTP mode (no stdio transport connected)
+   */
+  get isHttpMode(): boolean {
+    return !this.isStdioConnected;
   }
 
   /**
