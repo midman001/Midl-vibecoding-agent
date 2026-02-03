@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-01)
 ## Current Position
 
 Phase: 6.1 of 7 (MCP Server for Discord Posting)
-Plan: 3 of 5 in phase
+Plan: 4 of 5 in phase
 Status: In progress
-Last activity: 2026-02-03 - Completed 06.1-03-PLAN.md
+Last activity: 2026-02-03 - Completed 06.1-04-PLAN.md
 
-Progress: [########################-] 97% (25/29 total plans complete)
+Progress: [########################-] 97% (26/29 total plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 25
+- Total plans completed: 26
 - Average duration: 3.0 min
-- Total execution time: 83 min
+- Total execution time: 89 min
 
 **By Phase:**
 
@@ -35,10 +35,10 @@ Progress: [########################-] 97% (25/29 total plans complete)
 | 02.2-enhanced-solution-prioritization | 3 | 8 min | 2.7 min |
 | 05-remove-github-integration | 3 | 5 min | 1.7 min |
 | 06-discord-integration | 5 | 15 min | 3 min |
-| 06.1-mcp-server-for-discord-posting | 3 | 23 min | 7.7 min |
+| 06.1-mcp-server-for-discord-posting | 4 | 29 min | 7.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-04 (3 min), 06-05 (3 min), 06.1-01 (5 min), 06.1-02 (12 min), 06.1-03 (6 min)
+- Last 5 plans: 06-05 (3 min), 06.1-01 (5 min), 06.1-02 (12 min), 06.1-03 (6 min), 06.1-04 (6 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -113,6 +113,10 @@ Recent decisions affecting current work:
 - ThreadTracker uses append-only array with 24hr maxAge pruning (06.1-03)
 - Filename auto-generated from sanitized title + date for create_discord_thread (06.1-03)
 - list_recent_threads returns max 10 per user, 5 for title search (06.1-03)
+- postToDiscord method removed from WorkflowOrchestrator - MCP is only posting mechanism (06.1-04)
+- Agent users need only MCP_API_KEY, not Discord bot credentials (06.1-04)
+- MCP server runs separately with HTTP endpoint via mcp-proxy (06.1-04)
+- Default MCP server endpoint localhost:3847 for local development (06.1-04)
 
 ### Roadmap Evolution
 
@@ -133,5 +137,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-03
-Stopped at: Completed 06.1-03-PLAN.md (Discord posting tools with ThreadTracker)
+Stopped at: Completed 06.1-04-PLAN.md (Refactor orchestrator for MCP-based Discord posting)
 Resume file: None
