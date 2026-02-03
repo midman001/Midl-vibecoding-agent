@@ -10,7 +10,6 @@ import {
   loadSearchConfig,
   SearchConfig,
 } from "./search-config.js";
-import type { ForumPoster } from "../discord/forum-poster.js";
 
 export interface WorkflowResult {
   /** Auto-generated report draft */
@@ -25,20 +24,17 @@ export class WorkflowOrchestrator {
   private reportGenerator: BugReportGenerator;
   private diagnosticReportGenerator: DiagnosticReportGenerator;
   private config: SearchConfig;
-  private forumPoster?: ForumPoster;
 
   constructor(deps?: {
     reportGenerator?: BugReportGenerator;
     diagnosticReportGenerator?: DiagnosticReportGenerator;
     config?: SearchConfig;
-    forumPoster?: ForumPoster;
   }) {
     this.config = deps?.config ?? loadSearchConfig();
     this.reportGenerator =
       deps?.reportGenerator ?? new BugReportGenerator();
     this.diagnosticReportGenerator =
       deps?.diagnosticReportGenerator ?? new DiagnosticReportGenerator();
-    this.forumPoster = deps?.forumPoster;
   }
 
   /**
@@ -102,35 +98,6 @@ export class WorkflowOrchestrator {
   }
 
   /**
-   * Post a diagnostic report to the Discord forum.
-   * Returns thread URL on success, null if no forumPoster configured or on Discord API error.
-   */
-  async postToDiscord(
-    diagnosticReport: { markdown: string },
-    options: { title: string; authorName?: string }
-  ): Promise<{ threadUrl: string } | null> {
-    if (!this.forumPoster) {
-      return null;
-    }
-
-    const reportFilename = `diagnostic-report-${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}.md`;
-
-    try {
-      const result = await this.forumPoster.postReport({
-        title: options.title,
-        summary: options.title,
-        reportMarkdown: diagnosticReport.markdown,
-        reportFilename,
-        authorName: options.authorName,
-      });
-      return { threadUrl: result.threadUrl };
-    } catch (error) {
-      console.error("Failed to post to Discord:", error);
-      return null;
-    }
-  }
-
-  /**
    * Format report draft for user review.
    */
   private formatReportDraftResponse(
@@ -162,7 +129,10 @@ export class WorkflowOrchestrator {
     );
     lines.push("");
     lines.push(
-      "Want to share this on Discord? I can post it to the MIDL support forum for you."
+      "To share this on Discord, use the `create_discord_thread` MCP tool. Make sure you have your MCP_API_KEY configured."
+    );
+    lines.push(
+      "Run `/setup-mcp` in the MIDL Discord server to get your API key if you don't have one."
     );
 
     return lines.join("\n");

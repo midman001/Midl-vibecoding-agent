@@ -69,6 +69,16 @@ describe("WorkflowOrchestrator", () => {
       expect(result.formattedResponse).toContain("MIDL team");
       expect(result.formattedResponse).toContain("Discord");
     });
+
+    it("formattedResponse mentions MCP tool for Discord posting", async () => {
+      const orchestrator = new WorkflowOrchestrator();
+
+      const result = await orchestrator.handleProblemReport("some issue");
+
+      expect(result.formattedResponse).toContain("create_discord_thread");
+      expect(result.formattedResponse).toContain("MCP_API_KEY");
+      expect(result.formattedResponse).toContain("/setup-mcp");
+    });
   });
 
   describe("generateReportDraft", () => {
