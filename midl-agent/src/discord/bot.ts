@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { DiscordClient } from "./discord-client.js";
 import { ForumPoster } from "./forum-poster.js";
 import { CommandHandler } from "./command-handler.js";

@@ -4,15 +4,21 @@
  * Entry point and barrel export for the MCP server module.
  */
 
-export { McpDiscordServer, McpDiscordServerDeps } from "./server.js";
+import "dotenv/config";
+
+export { McpDiscordServer } from "./server.js";
+export type { McpDiscordServerDeps } from "./server.js";
 export { ApiKeyStore, apiKeyStore } from "./api-key-store.js";
-export { ThreadTracker, threadTracker, ThreadRecord } from "./thread-tracker.js";
-export {
+export { ThreadTracker, threadTracker } from "./thread-tracker.js";
+export type { ThreadRecord } from "./thread-tracker.js";
+export type {
   McpServerConfig,
   ApiKeyRecord,
   CreateThreadInput,
   CreateThreadResult,
   RateLimitResult,
+} from "./types.js";
+export {
   loadMcpServerConfig,
   RATE_LIMIT_POSTS_PER_HOUR,
   RATE_LIMIT_WINDOW_MS,

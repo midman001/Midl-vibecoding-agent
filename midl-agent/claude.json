@@ -6,7 +6,8 @@
   "mcpServers": {
     "midl-discord-poster": {
       "command": "npx",
-      "args": ["-y", "@anthropic-ai/mcp-proxy", "--endpoint", "http://localhost:3847"]
+      "args": ["tsx", "src/mcp-server/index.ts"],
+      "cwd": "."
     }
   },
   "commands": {
