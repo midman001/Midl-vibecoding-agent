@@ -5,6 +5,7 @@
   "main": "init-session.js",
   "scripts": {
     "build": "tsc",
+    "start": "node dist/combined.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "bot": "npx tsx src/discord/bot.ts",
