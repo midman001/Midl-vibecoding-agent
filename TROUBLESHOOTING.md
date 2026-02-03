@@ -11,7 +11,7 @@ Common issues and solutions for MIDL Agent.
 **Solutions:**
 1. Verify your API key is valid (run `/setup-mcp` in Discord to get a new one)
 2. Check that the Authorization header has `Bearer ` prefix (note the space)
-3. Ensure the URL is exactly `https://midl-agent.onrender.com/mcp`
+3. Ensure the URL is exactly `https://midl-discord-bot.onrender.com/mcp`
 
 **Check your settings:**
 ```json
@@ -19,7 +19,7 @@ Common issues and solutions for MIDL Agent.
   "mcpServers": {
     "midl-discord": {
       "type": "url",
-      "url": "https://midl-agent.onrender.com/mcp",
+      "url": "https://midl-discord-bot.onrender.com/mcp",
       "headers": {
         "Authorization": "Bearer midl_your_key_here"
       }

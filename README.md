@@ -33,7 +33,7 @@ Add to your Claude Code MCP settings (`~/.claude.json` or via Claude Code settin
   "mcpServers": {
     "midl-discord": {
       "type": "url",
-      "url": "https://midl-agent.onrender.com/mcp",
+      "url": "https://midl-discord-bot.onrender.com/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_MCP_API_KEY"
       }
