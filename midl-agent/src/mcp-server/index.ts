@@ -6,6 +6,7 @@
 
 export { McpDiscordServer, McpDiscordServerDeps } from "./server.js";
 export { ApiKeyStore, apiKeyStore } from "./api-key-store.js";
+export { ThreadTracker, threadTracker, ThreadRecord } from "./thread-tracker.js";
 export {
   McpServerConfig,
   ApiKeyRecord,

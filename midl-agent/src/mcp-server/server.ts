@@ -252,6 +252,60 @@ export class McpDiscordServer {
         }
       }
     );
+
+    // list_recent_threads tool
+    this.mcpServer.tool(
+      "list_recent_threads",
+      "List recently created threads. Returns your own recent posts or searches by title for duplicate checking.",
+      {
+        apiKey: z.string().describe("Your MCP API key from /setup-mcp command"),
+        searchTitle: z
+          .string()
+          .optional()
+          .describe("Optional: search for threads with similar title (for duplicate checking)"),
+      },
+      async ({ apiKey, searchTitle }) => {
+        // Validate API key
+        const record = this.validateApiKey(apiKey);
+        if (!record) {
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify({
+                  success: false,
+                  error: "Invalid API key. Run /setup-mcp in Discord to get your key.",
+                }),
+              },
+            ],
+          };
+        }
+
+        // Get threads based on whether searchTitle is provided
+        const threads = searchTitle
+          ? threadTracker.getRecentThreadsByTitle(searchTitle)
+          : threadTracker.getRecentThreads(apiKey);
+
+        // Format for response (exclude apiKey from output)
+        const formattedThreads = threads.map((t) => ({
+          title: t.title,
+          url: t.threadUrl,
+          createdAt: t.createdAt.toISOString(),
+        }));
+
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify({
+                success: true,
+                threads: formattedThreads,
+              }),
+            },
+          ],
+        };
+      }
+    );
   }
 
   /**
