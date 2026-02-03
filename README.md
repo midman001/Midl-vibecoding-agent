@@ -53,7 +53,7 @@ Add to your Claude Code MCP settings (`~/.claude/settings.json`):
     "midl-discord-poster": {
       "command": "npx",
       "args": ["tsx", "src/mcp-server/index.ts"],
-      "cwd": "/path/to/midl-agent-bundle/midl-agent"
+      "cwd": "/path/to/Midl-vibecoding-agent/midl-agent"
     }
   }
 }
@@ -109,7 +109,6 @@ If you're running your own Discord bot and MCP server (not using MIDL's hosted s
 
 - [MIDL SDK Documentation](https://js.midl.xyz/docs)
 - [MIDL Discord](https://discord.gg/midl)
-- [GitHub Issues](https://github.com/midl-xyz/midl-agent-bundle/issues)
 
 ## License
 

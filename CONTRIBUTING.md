@@ -85,14 +85,6 @@ Use clear, descriptive commit messages:
 - `docs: update installation guide`
 - `test: add api-key-store unit tests`
 
-## Reporting Issues
+## Questions or Issues?
 
-When reporting issues:
-- Use GitHub Issues
-- Include steps to reproduce
-- Include full error messages
-- Include environment details (Node version, OS)
-
-## Questions?
-
-Join the [MIDL Discord](https://discord.gg/midl) for discussion.
+Join the [MIDL Discord](https://discord.gg/midl) to report issues or ask questions.

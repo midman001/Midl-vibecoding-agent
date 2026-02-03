@@ -191,15 +191,8 @@ If persists, the code may have incorrect `export type` usage.
 
 ## Getting Help
 
-If these solutions don't work:
-
-1. **Search existing issues:** [GitHub Issues](https://github.com/midl-xyz/midl-agent-bundle/issues)
-
-2. **Ask in Discord:** [MIDL Discord](https://discord.gg/midl)
-
-3. **Open a new issue** with:
-   - Full error message
-   - Steps to reproduce
-   - Node version (`node --version`)
-   - OS (Windows/Mac/Linux)
-   - Contents of your `.env.example` (NOT `.env`!)
+If these solutions don't work, ask in the [MIDL Discord](https://discord.gg/midl) with:
+- Full error message
+- Steps to reproduce
+- Node version (`node --version`)
+- OS (Windows/Mac/Linux)
