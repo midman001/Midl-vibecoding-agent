@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "AI assistant for vibecoders building Web3 apps on Bitcoin and MIDL with the JavaScript SDK",
   "author": "Your Team",
+  "mcpServers": {
+    "midl-discord-poster": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-proxy", "--endpoint", "http://localhost:3847"]
+    }
+  },
   "commands": {
     "init": {
       "description": "Initialize the MIDL agent and fetch latest documentation",
