@@ -9,27 +9,23 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { DiscordClient } from "../discord/discord-client.js";
-import {
-  McpServerConfig,
-  ApiKeyRecord,
-  RATE_LIMIT_POSTS_PER_HOUR,
-  RATE_LIMIT_WINDOW_MS,
-} from "./types.js";
+import { McpServerConfig } from "./types.js";
+import { ApiKeyStore, apiKeyStore as defaultApiKeyStore } from "./api-key-store.js";
 
 export interface McpDiscordServerDeps {
   config: McpServerConfig;
-  apiKeyStore?: Map<string, ApiKeyRecord>;
+  apiKeyStore?: ApiKeyStore;
 }
 
 export class McpDiscordServer {
   private mcpServer: McpServer;
   private discordClient: DiscordClient | null = null;
   private config: McpServerConfig;
-  private apiKeyStore: Map<string, ApiKeyRecord>;
+  private apiKeyStore: ApiKeyStore;
 
   constructor(deps: McpDiscordServerDeps) {
     this.config = deps.config;
-    this.apiKeyStore = deps.apiKeyStore ?? new Map();
+    this.apiKeyStore = deps.apiKeyStore ?? defaultApiKeyStore;
 
     this.mcpServer = new McpServer({
       name: "midl-discord-poster",
@@ -42,36 +38,15 @@ export class McpDiscordServer {
   /**
    * Validate an API key and return the associated record if valid
    */
-  private validateApiKey(apiKey: string): ApiKeyRecord | null {
-    return this.apiKeyStore.get(apiKey) ?? null;
+  private validateApiKey(apiKey: string) {
+    return this.apiKeyStore.validateKey(apiKey);
   }
 
   /**
-   * Check rate limit for an API key record
+   * Check rate limit for an API key
    */
-  private checkRateLimit(record: ApiKeyRecord): {
-    allowed: boolean;
-    remaining: number;
-    resetInSeconds: number;
-  } {
-    const now = Date.now();
-    const windowStart = now - RATE_LIMIT_WINDOW_MS;
-
-    // Reset counter if window has passed
-    if (record.lastPostTime && record.lastPostTime.getTime() < windowStart) {
-      record.postsThisHour = 0;
-    }
-
-    const remaining = RATE_LIMIT_POSTS_PER_HOUR - record.postsThisHour;
-    const resetInSeconds = record.lastPostTime
-      ? Math.max(0, Math.ceil((record.lastPostTime.getTime() + RATE_LIMIT_WINDOW_MS - now) / 1000))
-      : 0;
-
-    return {
-      allowed: record.postsThisHour < RATE_LIMIT_POSTS_PER_HOUR,
-      remaining: Math.max(0, remaining),
-      resetInSeconds,
-    };
+  private checkRateLimit(apiKey: string) {
+    return this.apiKeyStore.checkRateLimit(apiKey);
   }
 
   /**
@@ -122,7 +97,7 @@ export class McpDiscordServer {
         }
 
         // Check rate limit
-        const rateLimit = this.checkRateLimit(record);
+        const rateLimit = this.checkRateLimit(apiKey);
 
         try {
           // Connect to Discord
@@ -183,9 +158,10 @@ export class McpDiscordServer {
   }
 
   /**
-   * Add an API key to the store (for testing or admin use)
+   * Create an API key for a Discord user (for testing or admin use)
+   * Returns the generated API key
    */
-  addApiKey(record: ApiKeyRecord): void {
-    this.apiKeyStore.set(record.apiKey, record);
+  createApiKeyForUser(discordUserId: string): string {
+    return this.apiKeyStore.createKey(discordUserId);
   }
 }

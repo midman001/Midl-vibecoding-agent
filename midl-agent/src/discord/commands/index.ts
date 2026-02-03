@@ -3,6 +3,7 @@ import { helpCommand } from "./help.js";
 import { statusCommand } from "./status.js";
 import { linksCommand } from "./links.js";
 import { networksCommand } from "./networks.js";
+import { setupMcpCommand } from "./setup-mcp.js";
 
 export interface SlashCommand {
   data: SlashCommandBuilder;
@@ -14,7 +15,8 @@ export const commands: SlashCommand[] = [
   statusCommand,
   linksCommand,
   networksCommand,
+  setupMcpCommand,
 ];
 
-export { helpCommand, statusCommand, linksCommand, networksCommand };
+export { helpCommand, statusCommand, linksCommand, networksCommand, setupMcpCommand };
 export { createReportBugCommand } from "./report-bug.js";

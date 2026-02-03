@@ -5,6 +5,7 @@
  */
 
 export { McpDiscordServer, McpDiscordServerDeps } from "./server.js";
+export { ApiKeyStore, apiKeyStore } from "./api-key-store.js";
 export {
   McpServerConfig,
   ApiKeyRecord,
