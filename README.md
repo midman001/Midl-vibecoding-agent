@@ -1,12 +1,14 @@
 # MIDL Agent
 
-AI assistant for vibecoders building Web3 applications on Bitcoin using the MIDL JavaScript SDK.
+Your AI coding companion for building Web3 applications on Bitcoin with the MIDL JavaScript SDK.
 
-## Features
+## What It Does
 
-- **Diagnostic Report Generation** - Comprehensive bug reports with environment details, steps taken, and suggestions
-- **Discord Integration** - Post reports to MIDL Discord support forum
-- **MCP Server** - Secure Discord posting from Claude Code without credential exposure
+**Real-time MIDL SDK assistance** - Ask anything about the MIDL.js library and get accurate, up-to-date answers pulled directly from the documentation. No more digging through docs or outdated Stack Overflow answers.
+
+**Bug report generation** - When you hit a wall, the agent generates structured diagnostic reports with your environment, error details, and suggested fixes.
+
+**Direct Discord support** - Post your bug reports straight to the MIDL Discord support forum without leaving Claude Code.
 
 ## Quick Start
 
@@ -30,9 +32,10 @@ npm install
 ```
 
 **Step 3: Get your MCP API key**
-1. Join the MIDL Discord server
-2. Run `/setup-mcp` in any channel
-3. Copy the API key from the ephemeral message
+1. Join the [MIDL Discord server](https://discord.com/invite/midl)
+2. Complete verification as described in the welcome channel
+3. Run `/setup-mcp` in any channel
+4. Copy the API key from the ephemeral message
 
 **Step 4: Configure environment**
 ```bash
@@ -70,37 +73,36 @@ You should see a response confirming the MCP server is connected.
 
 ## Usage
 
-### Generate Diagnostic Report
+### Ask About MIDL SDK
 
-Ask Claude Code:
-> "I'm getting an error with useBroadcast hook - it says 'unknown letter' when trying to send BTC"
+Just ask naturally:
+> "How do I use the useBroadcast hook to send BTC?"
+
+> "What's the difference between testnet4 and mainnet configuration?"
+
+> "Show me how to set up MidlProvider in my React app"
+
+The agent fetches current documentation and gives you accurate code examples.
+
+### Get Help With Errors
+
+When something breaks:
+> "I'm getting 'unknown letter x in PSBT' when trying to broadcast"
 
 The agent will:
-1. Extract relevant context from your description
-2. Generate a structured diagnostic report
-3. Offer to post it to the MIDL Discord support forum
+1. Analyze your error
+2. Check the docs for known issues
+3. Generate a diagnostic report with suggested fixes
 
-### Post to Discord
+### Post to Discord Support
 
-After generating a report, say:
+If you're still stuck:
 > "Post this to the MIDL Discord forum"
 
-The agent will use the MCP server to create a new thread with your report.
-
-### Check Rate Limits
-
-Each API key allows 5 posts per hour. Check your remaining posts:
-> "Check my Discord posting rate limit"
-
-## For MCP Server Operators
-
-If you're running your own Discord bot and MCP server (not using MIDL's hosted service), see [MCP-SETUP.md](midl-agent/MCP-SETUP.md).
+Creates a support thread directly from Claude Code. Rate limit: 5 posts/hour.
 
 ## Documentation
 
-- [MIDL-AGENT.md](midl-agent/MIDL-AGENT.md) - Agent system prompt and capabilities
-- [MCP-SETUP.md](midl-agent/MCP-SETUP.md) - MCP server operator guide
-- [.env.example](midl-agent/.env.example) - Environment variable template
 - [EXAMPLES.md](EXAMPLES.md) - Usage scenarios
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues and solutions
 - [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
@@ -108,7 +110,7 @@ If you're running your own Discord bot and MCP server (not using MIDL's hosted s
 ## Links
 
 - [MIDL SDK Documentation](https://js.midl.xyz/docs)
-- [MIDL Discord](https://discord.gg/midl)
+- [MIDL Discord](https://discord.com/invite/midl)
 
 ## License
 

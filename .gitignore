@@ -23,6 +23,9 @@ GSD-QUICKSTART.md
 _ul
 nul
 
+# Operator documentation (not for users)
+midl-agent/MCP-SETUP.md
+
 # Internal documentation (not needed for users)
 midl-agent/INDEX.md
 midl-agent/IMPLEMENTATION-SUMMARY.md

@@ -6,35 +6,26 @@ Common issues and solutions for MIDL Agent.
 
 ### "Cannot find module" errors
 
-**Problem:** Module not found when running bot or MCP server.
+**Problem:** Module not found when starting.
 
 **Solution:**
 ```bash
 cd midl-agent
 npm install
-npm run build
 ```
 
 ### "Missing required environment variables"
 
-**Problem:** Bot or MCP server fails to start with missing variables.
+**Problem:** MCP server fails to start with missing variables.
 
-**Solution:** Ensure `.env` file exists with required values:
+**Solution:** Ensure `.env` file exists with your API key:
 ```bash
 cp .env.example .env
-# Edit .env and fill in your values
+# Edit .env and add your MCP_API_KEY
 ```
 
-For agent users, you only need:
 ```
 MCP_API_KEY=midl_your_key_here
-```
-
-For MCP server operators, you also need:
-```
-DISCORD_BOT_TOKEN=your-bot-token
-DISCORD_GUILD_ID=your-guild-id
-DISCORD_FORUM_CHANNEL_ID=your-forum-channel-id
 ```
 
 ## MCP Server Issues
@@ -45,13 +36,11 @@ DISCORD_FORUM_CHANNEL_ID=your-forum-channel-id
 
 **Causes:**
 1. API key not set in `.env`
-2. API key was generated when a different bot instance was running
-3. Typo in the API key
+2. Typo in the API key
 
 **Solutions:**
-1. Get a new key by running `/setup-mcp` in Discord
-2. Ensure the Discord bot is running when you request a key
-3. Copy the full key including the `midl_` prefix
+1. Get a new key by running `/setup-mcp` in the [MIDL Discord](https://discord.com/invite/midl)
+2. Copy the full key including the `midl_` prefix
 
 ### "MCP server not connecting"
 
@@ -78,86 +67,6 @@ You should see: `MIDL MCP Server running on stdio`
 
 **Check your remaining posts:**
 Use the `check_server_status` MCP tool.
-
-## Discord Bot Issues
-
-### "Bot not responding to commands"
-
-**Problem:** Slash commands don't appear or don't respond.
-
-**Solutions:**
-1. Wait a few minutes for commands to register with Discord
-2. Check bot has correct permissions
-3. Re-invite bot with this permission URL:
-   ```
-   https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=326417591296&scope=bot%20applications.commands
-   ```
-
-### "Cannot post to forum channel"
-
-**Problem:** Bot can't create threads in the forum channel.
-
-**Check:**
-1. Is `DISCORD_FORUM_CHANNEL_ID` correct? (Right-click channel → Copy Channel ID)
-2. Is the channel type Forum (not regular text)?
-3. Does bot have these permissions on the channel?
-   - View Channel
-   - Send Messages
-   - Create Public Threads
-   - Send Messages in Threads
-   - Attach Files
-
-### "Private application cannot have a default authorization link"
-
-**Problem:** Error when generating OAuth URL in Discord Developer Portal.
-
-**Solution:** For private bots, manually construct the URL:
-```
-https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=326417591296&scope=bot%20applications.commands
-```
-
-Replace `YOUR_CLIENT_ID` with your bot's Client ID from the OAuth2 page.
-
-## Build Issues
-
-### TypeScript compilation errors
-
-**Problem:** `npm run build` fails.
-
-**Solution:**
-```bash
-rm -rf node_modules
-rm -rf dist
-npm install
-npm run build
-```
-
-### Test failures
-
-**Problem:** `npm test` shows failing tests.
-
-**Check:**
-1. Are you on the latest `main` branch?
-2. Did `npm install` complete?
-3. Is your `.env` file interfering? (Tests use mocks)
-
-**Try:**
-```bash
-rm -rf node_modules
-npm install
-npm test
-```
-
-### "The requested module does not provide an export"
-
-**Problem:** TypeScript/ESM import errors at runtime.
-
-**Solution:** This is usually a build issue:
-```bash
-npm run build
-```
-
-If persists, the code may have incorrect `export type` usage.
 
 ## Claude Code Integration Issues
 
@@ -191,7 +100,7 @@ If persists, the code may have incorrect `export type` usage.
 
 ## Getting Help
 
-If these solutions don't work, ask in the [MIDL Discord](https://discord.gg/midl) with:
+If these solutions don't work, ask in the [MIDL Discord](https://discord.com/invite/midl) with:
 - Full error message
 - Steps to reproduce
 - Node version (`node --version`)

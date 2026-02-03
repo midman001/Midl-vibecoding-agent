@@ -2,7 +2,56 @@
 
 Real-world examples of using the MIDL Agent.
 
-## Scenario 1: Report a Bug
+## Scenario 1: Ask About the SDK
+
+**User asks Claude Code:**
+> How do I set up MidlProvider in my React app?
+
+**Agent fetches MIDL documentation and responds:**
+> Here's how to set up MidlProvider in your React application:
+>
+> ```tsx
+> import { MidlProvider } from '@midl/executor-react';
+>
+> function App() {
+>   return (
+>     <MidlProvider network="testnet4">
+>       <YourApp />
+>     </MidlProvider>
+>   );
+> }
+> ```
+>
+> The `network` prop accepts `"mainnet"`, `"testnet4"`, or a custom config object.
+> Make sure to wrap your entire app so all MIDL hooks have access to the context.
+
+---
+
+## Scenario 2: Learn About Hooks
+
+**User asks:**
+> What hooks are available for broadcasting transactions?
+
+**Agent responds with current documentation:**
+> MIDL provides several hooks for transaction broadcasting:
+>
+> - `useBroadcast()` - Main hook for broadcasting signed PSBTs
+> - `useTransaction()` - Track transaction status after broadcast
+> - `useFeeEstimate()` - Get current fee estimates before building tx
+>
+> Example with useBroadcast:
+> ```tsx
+> const { broadcast, isPending, error } = useBroadcast();
+>
+> const handleSend = async (psbt) => {
+>   const txid = await broadcast(psbt);
+>   console.log('Broadcasted:', txid);
+> };
+> ```
+
+---
+
+## Scenario 3: Report a Bug
 
 **User asks Claude Code:**
 > I'm trying to use the useBroadcast hook but I'm getting an error: "unknown letter 'x' in PSBT". I'm on testnet4, using @midl/executor-react v0.2.1.
@@ -37,7 +86,7 @@ Error "unknown letter 'x' in PSBT" when using useBroadcast hook.
 
 ---
 
-## Scenario 2: Post to Discord via MCP
+## Scenario 4: Post to Discord via MCP
 
 **User says:**
 > Yes, post it to Discord
@@ -60,7 +109,7 @@ Error "unknown letter 'x' in PSBT" when using useBroadcast hook.
 
 ---
 
-## Scenario 3: Check for Existing Reports
+## Scenario 5: Check for Existing Reports
 
 **User asks:**
 > Has anyone else reported issues with PSBT parsing?
@@ -86,28 +135,7 @@ Error "unknown letter 'x' in PSBT" when using useBroadcast hook.
 
 ---
 
-## Scenario 4: Using Discord Bot Directly
-
-**In Discord, user runs `/report-bug`:**
-
-The bot presents a modal asking for:
-- Problem description
-- Error message (optional)
-- Environment details (optional)
-
-**After submission:**
-
-Bot generates a diagnostic report and creates a forum thread, then responds:
-> 🐛 **Bug Report Created**
->
-> I've created a support thread for your issue:
-> https://discord.com/channels/.../...
->
-> The MIDL team will review and respond there.
-
----
-
-## Scenario 5: Quick Status Check
+## Scenario 6: Quick Status Check
 
 **User asks Claude Code:**
 > Check if the MIDL Discord server is available
@@ -129,7 +157,7 @@ Bot generates a diagnostic report and creates a forum thread, then responds:
 
 ---
 
-## Scenario 6: Rate Limit Hit
+## Scenario 7: Rate Limit Hit
 
 **User tries to post too many times:**
 > Post another report to Discord
@@ -152,7 +180,7 @@ Bot generates a diagnostic report and creates a forum thread, then responds:
 
 ---
 
-## Scenario 7: Invalid API Key
+## Scenario 8: Invalid API Key
 
 **User hasn't set up their API key:**
 > Post this report to Discord
@@ -169,8 +197,9 @@ Bot generates a diagnostic report and creates a forum thread, then responds:
 > I couldn't post the report - your MCP API key is invalid or not configured.
 >
 > To get a key:
-> 1. Join the MIDL Discord server
-> 2. Run `/setup-mcp` in any channel
+> 1. Join the [MIDL Discord server](https://discord.com/invite/midl)
+> 2. Complete verification in the welcome channel
+> 3. Run `/setup-mcp` in any channel
 > 3. Add the key to your `.env` file: `MCP_API_KEY=midl_your_key`
 > 4. Restart Claude Code
 >
@@ -178,7 +207,7 @@ Bot generates a diagnostic report and creates a forum thread, then responds:
 
 ---
 
-## Scenario 8: Detailed Bug with Code
+## Scenario 9: Detailed Bug with Code
 
 **User provides code and error:**
 > I'm getting "TypeError: Cannot read property 'sign' of undefined" when calling this:
