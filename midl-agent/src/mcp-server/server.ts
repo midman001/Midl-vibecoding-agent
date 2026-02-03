@@ -9,8 +9,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { DiscordClient } from "../discord/discord-client.js";
+import { ForumPoster } from "../discord/forum-poster.js";
 import { McpServerConfig } from "./types.js";
 import { ApiKeyStore, apiKeyStore as defaultApiKeyStore } from "./api-key-store.js";
+import { threadTracker } from "./thread-tracker.js";
 
 export interface McpDiscordServerDeps {
   config: McpServerConfig;
@@ -20,6 +22,7 @@ export interface McpDiscordServerDeps {
 export class McpDiscordServer {
   private mcpServer: McpServer;
   private discordClient: DiscordClient | null = null;
+  private forumPoster: ForumPoster | null = null;
   private config: McpServerConfig;
   private apiKeyStore: ApiKeyStore;
 
@@ -132,6 +135,116 @@ export class McpDiscordServer {
                 text: JSON.stringify({
                   connected: false,
                   error: `Discord connection failed: ${errorMessage}`,
+                }),
+              },
+            ],
+          };
+        }
+      }
+    );
+
+    // create_discord_thread tool
+    this.mcpServer.tool(
+      "create_discord_thread",
+      "Post a diagnostic report to the Discord forum as a new thread",
+      {
+        apiKey: z.string().describe("Your MCP API key from /setup-mcp command"),
+        reportMarkdown: z.string().describe("The diagnostic report content in markdown format"),
+        title: z.string().max(100).describe("Thread title (max 100 chars)"),
+        summary: z.string().describe("Brief summary of the issue"),
+        authorName: z.string().optional().describe("Name to display as report author"),
+      },
+      async ({ apiKey, reportMarkdown, title, summary, authorName }) => {
+        // Validate API key
+        const record = this.validateApiKey(apiKey);
+        if (!record) {
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify({
+                  success: false,
+                  error: "Invalid API key. Run /setup-mcp in Discord to get your key.",
+                }),
+              },
+            ],
+          };
+        }
+
+        // Check rate limit
+        const rateLimit = this.checkRateLimit(apiKey);
+        if (!rateLimit.allowed) {
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify({
+                  success: false,
+                  error: `Rate limit exceeded. ${rateLimit.remaining} posts remaining. Resets in ${rateLimit.resetInSeconds}s`,
+                }),
+              },
+            ],
+          };
+        }
+
+        try {
+          // Ensure Discord is connected
+          await this.ensureDiscordConnection();
+
+          // Initialize ForumPoster if not done
+          if (!this.forumPoster) {
+            this.forumPoster = new ForumPoster(this.discordClient!);
+          }
+
+          // Generate filename from title
+          const sanitizedTitle = title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "")
+            .slice(0, 50);
+          const timestamp = new Date().toISOString().split("T")[0];
+          const reportFilename = `diagnostic-${sanitizedTitle}-${timestamp}.md`;
+
+          // Post to Discord
+          const result = await this.forumPoster.postReport({
+            title,
+            summary,
+            reportMarkdown,
+            reportFilename,
+            authorName,
+          });
+
+          // Record the post for rate limiting
+          this.apiKeyStore.recordPost(apiKey);
+
+          // Track thread for list_recent_threads
+          threadTracker.recordThread({
+            threadId: result.threadId,
+            threadUrl: result.threadUrl,
+            title,
+            apiKey,
+          });
+
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify({
+                  success: true,
+                  url: result.threadUrl,
+                }),
+              },
+            ],
+          };
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : "Unknown error";
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify({
+                  success: false,
+                  error: errorMessage,
                 }),
               },
             ],
