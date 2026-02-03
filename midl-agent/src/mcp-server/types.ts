@@ -84,3 +84,39 @@ export function loadMcpServerConfig(): McpServerConfig {
     forumChannelId: forumChannelId!,
   };
 }
+
+/**
+ * Configuration for HTTP MCP server
+ */
+export interface HttpMcpServerConfig extends McpServerConfig {
+  port: number;
+  host: string;
+  allowedOrigins: string[]; // For origin validation
+  connectionTimeoutMs: number;
+}
+
+/**
+ * Load HTTP MCP server configuration from environment variables.
+ * Extends loadMcpServerConfig with HTTP-specific settings.
+ */
+export function loadHttpMcpServerConfig(): HttpMcpServerConfig {
+  const baseConfig = loadMcpServerConfig();
+
+  const port = parseInt(process.env.MCP_SERVER_PORT || "3847", 10);
+  const host = process.env.MCP_SERVER_HOST || "0.0.0.0";
+  const allowedOrigins = process.env.MCP_ALLOWED_ORIGINS
+    ? process.env.MCP_ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+    : []; // Empty array = allow all origins (for local dev)
+  const connectionTimeoutMs = parseInt(
+    process.env.MCP_CONNECTION_TIMEOUT_MS || "30000",
+    10
+  );
+
+  return {
+    ...baseConfig,
+    port,
+    host,
+    allowedOrigins,
+    connectionTimeoutMs,
+  };
+}
