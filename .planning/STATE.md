@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-01)
 
 **Core value:** Vibecoders get instant, expert MIDL SDK assistance with comprehensive diagnostic reports--resolving issues in minutes instead of days.
-**Current focus:** Phase 6 - Discord Integration (complete) | Ready for Phase 7
+**Current focus:** Phase 6.1 - MCP Server for Discord Posting (in progress)
 
 ## Current Position
 
-Phase: 6 of 7 (Discord Integration)
-Plan: 5 of 5 in phase
-Status: Phase complete
-Last activity: 2026-02-02 - Completed 06-05-PLAN.md
+Phase: 6.1 of 7 (MCP Server for Discord Posting)
+Plan: 1 of 5 in phase
+Status: In progress
+Last activity: 2026-02-03 - Completed 06.1-01-PLAN.md
 
-Progress: [#######################] 92% (22/24 total plans complete)
+Progress: [#######################-] 93% (23/29 total plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
-- Average duration: 2.7 min
-- Total execution time: 60 min
+- Total plans completed: 23
+- Average duration: 2.8 min
+- Total execution time: 65 min
 
 **By Phase:**
 
@@ -35,9 +35,10 @@ Progress: [#######################] 92% (22/24 total plans complete)
 | 02.2-enhanced-solution-prioritization | 3 | 8 min | 2.7 min |
 | 05-remove-github-integration | 3 | 5 min | 1.7 min |
 | 06-discord-integration | 5 | 15 min | 3 min |
+| 06.1-mcp-server-for-discord-posting | 1 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-01 (3 min), 06-02 (3 min), 06-03 (3 min), 06-04 (3 min), 06-05 (3 min)
+- Last 5 plans: 06-02 (3 min), 06-03 (3 min), 06-04 (3 min), 06-05 (3 min), 06.1-01 (5 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -101,6 +102,10 @@ Recent decisions affecting current work:
 - Bot entry point returns cleanup function for testability and graceful shutdown (06-05)
 - DiscordClient.on() method added to expose underlying Client events (06-05)
 - postToDiscord catches Discord API errors and returns null, lets config errors propagate (06-05)
+- McpDiscordServer uses Map<string, ApiKeyRecord> for in-memory API key storage (06.1-01)
+- Lazy Discord connection via ensureDiscordConnection() on first tool call (06.1-01)
+- Rate limit checking returns remaining posts and reset time (06.1-01)
+- MCP tool responses use JSON.stringify for structured data in text content (06.1-01)
 
 ### Roadmap Evolution
 
@@ -120,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-02
-Stopped at: Completed 06-05-PLAN.md (bot entry point and integration - Phase 6 complete)
+Last session: 2026-02-03
+Stopped at: Completed 06.1-01-PLAN.md (MCP server foundation with check_server_status tool)
 Resume file: None
