@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-01)
 ## Current Position
 
 Phase: 6.1 of 7 (MCP Server for Discord Posting)
-Plan: 2 of 5 in phase
+Plan: 3 of 5 in phase
 Status: In progress
-Last activity: 2026-02-03 - Completed 06.1-02-PLAN.md
+Last activity: 2026-02-03 - Completed 06.1-03-PLAN.md
 
-Progress: [########################-] 96% (24/29 total plans complete)
+Progress: [########################-] 97% (25/29 total plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24
-- Average duration: 2.9 min
-- Total execution time: 77 min
+- Total plans completed: 25
+- Average duration: 3.0 min
+- Total execution time: 83 min
 
 **By Phase:**
 
@@ -35,10 +35,10 @@ Progress: [########################-] 96% (24/29 total plans complete)
 | 02.2-enhanced-solution-prioritization | 3 | 8 min | 2.7 min |
 | 05-remove-github-integration | 3 | 5 min | 1.7 min |
 | 06-discord-integration | 5 | 15 min | 3 min |
-| 06.1-mcp-server-for-discord-posting | 2 | 17 min | 8.5 min |
+| 06.1-mcp-server-for-discord-posting | 3 | 23 min | 7.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-03 (3 min), 06-04 (3 min), 06-05 (3 min), 06.1-01 (5 min), 06.1-02 (12 min)
+- Last 5 plans: 06-04 (3 min), 06-05 (3 min), 06.1-01 (5 min), 06.1-02 (12 min), 06.1-03 (6 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -110,6 +110,9 @@ Recent decisions affecting current work:
 - Rate limit window resets based on lastPostTime + window, not rolling window (06.1-02)
 - Singleton apiKeyStore shared between Discord bot and MCP server (06.1-02)
 - Ephemeral reply + DM backup for secure credential delivery in /setup-mcp (06.1-02)
+- ThreadTracker uses append-only array with 24hr maxAge pruning (06.1-03)
+- Filename auto-generated from sanitized title + date for create_discord_thread (06.1-03)
+- list_recent_threads returns max 10 per user, 5 for title search (06.1-03)
 
 ### Roadmap Evolution
 
@@ -130,5 +133,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-03
-Stopped at: Completed 06.1-02-PLAN.md (API key generation with /setup-mcp command)
+Stopped at: Completed 06.1-03-PLAN.md (Discord posting tools with ThreadTracker)
 Resume file: None
