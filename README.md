@@ -14,62 +14,42 @@ Your AI coding companion for building Web3 applications on Bitcoin with the MIDL
 
 ### Prerequisites
 
-- [ ] Node.js >= 18.0.0 (`node --version`)
 - [ ] Claude Code CLI installed (`claude --version`)
 - [ ] Discord account for API key
 
 ### Installation
 
-**Step 1: Clone the repository**
-```bash
-git clone https://github.com/midman001/Midl-vibecoding-agent.git
-cd Midl-vibecoding-agent
-```
-
-**Step 2: Install dependencies**
-```bash
-npm install
-```
-
-**Step 3: Get your MCP API key**
+**Step 1: Get your MCP API key**
 1. Join the [MIDL Discord server](https://discord.com/invite/midl)
 2. Complete verification as described in the welcome channel
 3. Run `/setup-mcp` in any channel
 4. Copy the API key from the ephemeral message
 
-**Step 4: Configure environment**
-```bash
-cp .env.example .env
-```
+**Step 2: Configure Claude Code**
 
-Edit `.env` and add your API key:
-```
-MCP_API_KEY=midl_your_key_here
-```
-
-**Step 5: Add to Claude Code**
-
-Add to your Claude Code MCP settings (`~/.claude/settings.json`):
+Add to your Claude Code MCP settings (`~/.claude.json` or via Claude Code settings):
 ```json
 {
   "mcpServers": {
-    "midl-discord-poster": {
-      "command": "npx",
-      "args": ["tsx", "src/mcp-server/index.ts"],
-      "cwd": "/path/to/Midl-vibecoding-agent/midl-agent"
+    "midl-discord": {
+      "type": "url",
+      "url": "https://midl-agent.onrender.com/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_MCP_API_KEY"
+      }
     }
   }
 }
 ```
 
-Replace `/path/to/` with your actual path.
+Replace `YOUR_MCP_API_KEY` with the key from step 1.
 
 ### Verify Installation
 
 Start a new Claude Code session and ask:
-> "Check the MIDL Discord server status"
+> "Check the MIDL MCP server status"
 
-You should see a response confirming the MCP server is connected.
+You should see a response confirming connection to the hosted server.
 
 ## Usage
 
