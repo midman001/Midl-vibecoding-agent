@@ -14,20 +14,53 @@ Your AI coding companion for building Web3 applications on Bitcoin with the MIDL
 
 ### Prerequisites
 
-- [ ] Claude Code CLI installed (`claude --version`)
-- [ ] Discord account for API key
+- Claude Code CLI installed (`claude --version`)
+- Discord account (for MCP API key)
 
-### Installation
+### Step 1: Clone the Agent
 
-**Step 1: Get your MCP API key**
+```bash
+git clone https://github.com/midman001/Midl-vibecoding-agent.git
+cd Midl-vibecoding-agent
+```
+
+### Step 2: Get your MCP API key
+
 1. Join the [MIDL Discord server](https://discord.com/invite/midl)
 2. Complete verification as described in the welcome channel
 3. Run `/setup-mcp` in any channel
 4. Copy the API key from the ephemeral message
 
-**Step 2: Configure Claude Code**
+### Step 3: Configure Claude Code
 
-Add to your Claude Code MCP settings (`~/.claude.json` or via Claude Code settings):
+Add to your Claude Code settings (`~/.claude.json`):
+
+```json
+{
+  "projects": {
+    "/path/to/your/project": {
+      "systemPromptFile": "/path/to/Midl-vibecoding-agent/midl-agent/system-prompt.md"
+    }
+  },
+  "mcpServers": {
+    "midl-discord": {
+      "command": "node",
+      "args": ["/path/to/Midl-vibecoding-agent/stdio-proxy/index.js"],
+      "env": {
+        "MCP_API_KEY": "YOUR_MCP_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Replace:
+- `/path/to/your/project` with your actual project directory
+- `/path/to/Midl-vibecoding-agent` with where you cloned this repo
+- `YOUR_MCP_API_KEY` with the key from step 2
+
+**Alternative: Direct HTTP connection** (if you don't want to run the local proxy)
+
 ```json
 {
   "mcpServers": {
@@ -42,14 +75,28 @@ Add to your Claude Code MCP settings (`~/.claude.json` or via Claude Code settin
 }
 ```
 
-Replace `YOUR_MCP_API_KEY` with the key from step 1.
+Note: Direct HTTP may have compatibility issues with some Claude Code versions. The stdio proxy is more reliable.
 
-### Verify Installation
+### Step 4: Verify Installation
 
-Start a new Claude Code session and ask:
+Start a new Claude Code session in your project and ask:
+
 > "Check the MIDL MCP server status"
 
-You should see a response confirming connection to the hosted server.
+Claude should respond with server connection details and your rate limit status.
+
+## What Gets Installed
+
+| Component | Purpose |
+|-----------|---------|
+| `midl-agent/system-prompt.md` | Agent behavior and MIDL knowledge base |
+| `stdio-proxy/index.js` | Local proxy for reliable MCP connection |
+
+The system prompt teaches Claude to:
+- Auto-fetch MIDL SDK docs at session start
+- Recognize MIDL-related questions and activate specialized assistance
+- Generate diagnostic reports for bugs
+- Post issues to Discord support forum
 
 ## Usage
 
