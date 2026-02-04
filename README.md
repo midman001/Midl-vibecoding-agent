@@ -17,12 +17,19 @@ Your AI coding companion for building Web3 applications on Bitcoin with the MIDL
 - Claude Code CLI installed (`claude --version`)
 - Discord account (for MCP API key)
 
-### Step 1: Clone the Agent
+### Step 1: Clone the Agent (Global Installation)
+
+Install to your Claude global config directory so it works across all projects:
 
 ```bash
-git clone https://github.com/midman001/Midl-vibecoding-agent.git
-cd Midl-vibecoding-agent
+# Create agents directory if it doesn't exist
+mkdir -p ~/.claude/agents
+
+# Clone the agent
+git clone https://github.com/midman001/Midl-vibecoding-agent.git ~/.claude/agents/Midl-vibecoding-agent
 ```
+
+This installs the agent globally at `~/.claude/agents/Midl-vibecoding-agent/`.
 
 ### Step 2: Get your MCP API key
 
@@ -39,13 +46,13 @@ Add to your Claude Code settings (`~/.claude.json`):
 {
   "projects": {
     "/path/to/your/project": {
-      "systemPromptFile": "/path/to/Midl-vibecoding-agent/midl-vibecoding-agent.md"
+      "systemPromptFile": "~/.claude/agents/Midl-vibecoding-agent/midl-vibecoding-agent.md"
     }
   },
   "mcpServers": {
     "midl-discord": {
       "command": "node",
-      "args": ["/path/to/Midl-vibecoding-agent/stdio-proxy/index.js"],
+      "args": ["~/.claude/agents/Midl-vibecoding-agent/stdio-proxy/index.js"],
       "env": {
         "MCP_API_KEY": "YOUR_MCP_API_KEY"
       }
@@ -56,8 +63,9 @@ Add to your Claude Code settings (`~/.claude.json`):
 
 Replace:
 - `/path/to/your/project` with your actual project directory
-- `/path/to/Midl-vibecoding-agent` with where you cloned this repo
 - `YOUR_MCP_API_KEY` with the key from step 2
+
+**Tip**: To enable for ALL projects, use `"*"` as the project key instead of a specific path.
 
 **Alternative: Direct HTTP connection** (if you don't want to run the local proxy)
 
