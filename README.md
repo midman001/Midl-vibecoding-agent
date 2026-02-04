@@ -38,14 +38,14 @@ This installs the agent globally at `~/.claude/agents/Midl-vibecoding-agent/`.
 3. Run `/setup-mcp` in any channel
 4. Copy the API key from the ephemeral message
 
-### Step 3: Configure Claude Code
+### Step 3: Configure Claude Code (Global Installation)
 
-Add to your Claude Code settings (`~/.claude.json`):
+Add **both** the agent and MCP server to your global Claude Code settings (`~/.claude.json`):
 
 ```json
 {
   "projects": {
-    "/path/to/your/project": {
+    "*": {
       "systemPromptFile": "~/.claude/agents/Midl-vibecoding-agent/midl-vibecoding-agent.md"
     }
   },
@@ -61,11 +61,18 @@ Add to your Claude Code settings (`~/.claude.json`):
 }
 ```
 
-Replace:
-- `/path/to/your/project` with your actual project directory
-- `YOUR_MCP_API_KEY` with the key from step 2
+Replace `YOUR_MCP_API_KEY` with the key from step 2.
 
-**Tip**: To enable for ALL projects, use `"*"` as the project key instead of a specific path.
+**What this does:**
+- `"*"` enables the agent for ALL your projects globally
+- The `mcpServers` section gives Claude access to the Discord posting tools
+
+**Note for Windows users:** Use forward slashes in paths, or escape backslashes:
+```json
+"args": ["C:/Users/yourname/.claude/agents/Midl-vibecoding-agent/stdio-proxy/index.js"]
+```
+
+**Single project only?** Replace `"*"` with your project path (e.g., `"/home/user/my-project"`).
 
 **Alternative: Direct HTTP connection** (if you don't want to run the local proxy)
 
