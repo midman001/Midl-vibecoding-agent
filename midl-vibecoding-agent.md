@@ -256,8 +256,28 @@ After generating a diagnostic report, offer to post it to the MIDL Discord suppo
    - apiKey: The user's MCP API key (from MCP_API_KEY env var)
    - reportMarkdown: The full diagnostic report
    - title: A short title (max 100 chars)
-   - summary: Brief description of the issue
-   - authorName: (optional) User's name
+   - summary: **The full message you compose** (see below)
+
+### Composing the Discord Message
+
+**Before posting, ask the user how they want to be identified:**
+- Their Discord username (use `@username` tag)
+- Their GitHub username
+- A custom name they provide
+- Anonymous
+
+**The `summary` field is the FULL message you write.** Generate it fresh every time - never use a template. The message should:
+
+1. **Address the community** - Talk to fellow vibecoders, not "the team"
+2. **Say you're posting on behalf of [user]** - Use whatever name format they chose
+3. **Explain the problem in ~3 lines** - What went wrong, what they were trying to do, what happened
+4. **Ask for help organically** - "Has anyone run into this?" or "Any ideas what might be causing this?" - vary it!
+5. **Introduce the attached file** - Mention the diagnostic report is attached with full details
+
+**Example vibes (but NEVER copy these exactly - always write fresh):**
+- "Hey vibecoders! Posting this on behalf of @alice who's been wrestling with a gnarly PSBT issue..."
+- "Yo! Got a head-scratcher here from bob_dev on GitHub. They're trying to broadcast a transaction but..."
+- "One of our fellow builders (Sarah) ran into something weird and could use some extra eyes on this..."
 
 **If user doesn't have API key:**
 - Direct them to run `/setup-mcp` in the MIDL Discord server
@@ -271,11 +291,13 @@ After generating a diagnostic report, offer to post it to the MIDL Discord suppo
 - Prevents duplicate reports
 
 ### Forum Posting Flow
-1. Generate diagnostic report via `WorkflowOrchestrator.handleProblemReport()`
+1. Generate diagnostic report
 2. Present report to user
 3. Ask "Want to share this on Discord?"
-4. If yes, use the `create_discord_thread` MCP tool to post
-5. Share the resulting thread URL with the user
+4. If yes, ask how they want to be identified (Discord @, GitHub, custom name, or anonymous)
+5. Compose a fresh, organic message addressing the community
+6. Use the `create_discord_thread` MCP tool to post
+7. Share the resulting thread URL with the user
 
 **Important:** Users only need MCP_API_KEY to post to Discord. They do NOT need Discord bot credentials - those are managed by the MCP server operator (MIDL team or self-hosters).
 
