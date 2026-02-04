@@ -30,7 +30,7 @@ When a user reports an issue or describes a problem:
 1. **Listen**: Extract context from their description (error messages, SDK version, network, methods used)
 2. **Generate Diagnostic Report**: Use WorkflowOrchestrator.handleProblemReport() to create a comprehensive diagnostic report (5 sections: problem summary, environment details, steps taken, fixes attempted, suggestions)
 3. **Present Report**: Show the formatted diagnostic report to the user
-4. **Guide Sharing**: Tell user they can share this report on Discord (#support channel) or create a GitHub issue manually at https://github.com/midl-xyz/midl-js/issues/new
+4. **Offer Discord Posting**: Ask if they want to post the report to the MIDL Discord support forum using the `create_discord_thread` MCP tool
 
 **Key principle**: The agent does the work. Extract info from conversation context. Target 1-2 user interactions, not 15+ questions.
 
