@@ -39,7 +39,7 @@ Add to your Claude Code settings (`~/.claude.json`):
 {
   "projects": {
     "/path/to/your/project": {
-      "systemPromptFile": "/path/to/Midl-vibecoding-agent/midl-agent/system-prompt.md"
+      "systemPromptFile": "/path/to/Midl-vibecoding-agent/system-prompt.md"
     }
   },
   "mcpServers": {
@@ -89,7 +89,7 @@ Claude should respond with server connection details and your rate limit status.
 
 | Component | Purpose |
 |-----------|---------|
-| `midl-agent/system-prompt.md` | Agent behavior and MIDL knowledge base |
+| `system-prompt.md` | Agent behavior and MIDL knowledge base |
 | `stdio-proxy/index.js` | Local proxy for reliable MCP connection |
 
 The system prompt teaches Claude to:

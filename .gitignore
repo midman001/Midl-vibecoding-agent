@@ -1,54 +1,9 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
-
 # Environment files (never commit secrets!)
 .env
 *.env.local
-
-# Legacy GitHub integration code (deprecated)
-midl-agent/src/search/legacy/
-midl-agent/src/types/legacy/
-
-# Server infrastructure (private deployment only)
-# These files are deployed via private repo, not distributed publicly
-midl-agent/src/discord/
-midl-agent/src/mcp-server/
-midl-agent/src/combined.ts
-render.yaml
-
-# Internal development files
-.planning/
-.claude/
-midl-agent-improvement-patch/
-COMPUTER-SETUP.md
-GSD-QUICKSTART.md
-
-# Temp files
-_ul
-nul
-
-# Operator documentation (not for users)
-midl-agent/MCP-SETUP.md
-
-# Internal documentation (not needed for users)
-midl-agent/INDEX.md
-midl-agent/IMPLEMENTATION-SUMMARY.md
-midl-agent/PACKAGE-SUMMARY.txt
-midl-agent/utilities.ts
-midl-agent/mcp-integration.md
-midl-agent/example-scenarios.md
-midl-agent/CLAUDE-CODE-INTEGRATION.md
-midl-agent/init-session.js
-midl-agent/bug-report-workflow.md
-
-# Test utility files
-midl-agent/test-*.js
-
-# Old README (we have one at root)
-midl-agent/README.md
 
 # OS files
 .DS_Store
