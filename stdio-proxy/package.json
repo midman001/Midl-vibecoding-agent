@@ -1,0 +1,38 @@
+{
+  "name": "midl-discord-mcp",
+  "version": "1.0.0",
+  "description": "MIDL Discord MCP client - stdio proxy for Claude Code integration",
+  "bin": {
+    "midl-discord-mcp": "./index.js"
+  },
+  "main": "index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "midl",
+    "mcp",
+    "model-context-protocol",
+    "discord",
+    "claude",
+    "claude-code",
+    "ai",
+    "bitcoin",
+    "web3"
+  ],
+  "author": "MIDL <support@midl.xyz>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/midman001/Midl-vibecoding-agent.git",
+    "directory": "stdio-proxy"
+  },
+  "bugs": {
+    "url": "https://github.com/midman001/Midl-vibecoding-agent/issues"
+  },
+  "homepage": "https://github.com/midman001/Midl-vibecoding-agent/tree/main/stdio-proxy#readme"
+}

@@ -32,6 +32,10 @@ if (!API_KEY) {
 // Buffer for reading stdin
 let inputBuffer = "";
 
+// Session management
+let sessionId = null;
+let sessionInitPromise = null;
+
 // Server info for MCP protocol
 const SERVER_INFO = {
   name: "midl-discord-proxy",
@@ -124,9 +128,78 @@ function sendError(id, code, message) {
 }
 
 /**
+ * Parse SSE response to extract JSON data
+ */
+function parseSSEResponse(text) {
+  const lines = text.split("\n");
+  for (const line of lines) {
+    if (line.startsWith("data: ")) {
+      return JSON.parse(line.slice(6));
+    }
+  }
+  // Try parsing as plain JSON
+  return JSON.parse(text);
+}
+
+/**
+ * Initialize session with remote server
+ */
+async function initializeSession() {
+  if (sessionId) return sessionId;
+
+  if (sessionInitPromise) return sessionInitPromise;
+
+  sessionInitPromise = (async () => {
+    console.error("Initializing session with remote server...");
+
+    const response = await fetch(MCP_SERVER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "Authorization": `Bearer ${API_KEY}`,
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "initialize",
+        params: {
+          protocolVersion: "2024-11-05",
+          capabilities: {},
+          clientInfo: {
+            name: "midl-discord-proxy",
+            version: "1.0.0",
+          },
+        },
+        id: "init",
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Failed to initialize session: HTTP ${response.status}: ${text}`);
+    }
+
+    // Get session ID from header
+    sessionId = response.headers.get("mcp-session-id");
+
+    if (!sessionId) {
+      throw new Error("Server did not return mcp-session-id header");
+    }
+
+    console.error(`Session initialized: ${sessionId}`);
+    return sessionId;
+  })();
+
+  return sessionInitPromise;
+}
+
+/**
  * Proxy a tool call to the remote server
  */
 async function proxyToolCall(toolName, args) {
+  // Ensure session is initialized
+  await initializeSession();
+
   // Auto-inject API key if not provided
   const argsWithKey = { ...args, apiKey: args.apiKey || API_KEY };
 
@@ -136,6 +209,7 @@ async function proxyToolCall(toolName, args) {
       "Content-Type": "application/json",
       "Accept": "application/json, text/event-stream",
       "Authorization": `Bearer ${API_KEY}`,
+      "mcp-session-id": sessionId,
     },
     body: JSON.stringify({
       jsonrpc: "2.0",
@@ -153,7 +227,8 @@ async function proxyToolCall(toolName, args) {
     throw new Error(`HTTP ${response.status}: ${text}`);
   }
 
-  const result = await response.json();
+  const text = await response.text();
+  const result = parseSSEResponse(text);
 
   if (result.error) {
     throw new Error(result.error.message || "Unknown error from server");
@@ -171,6 +246,9 @@ async function handleRequest(request) {
   try {
     switch (method) {
       case "initialize":
+        // Initialize session with remote server
+        await initializeSession();
+
         // MCP handshake - return capabilities
         sendResponse({
           jsonrpc: "2.0",
