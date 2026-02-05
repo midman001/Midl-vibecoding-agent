@@ -8,7 +8,7 @@ Your AI coding companion for building Web3 applications on Bitcoin with the MIDL
 
 **Bug report generation** - When you hit a wall, the agent generates structured diagnostic reports with your environment, error details, and suggested fixes.
 
-**Direct Discord support** - Post your bug reports straight to the MIDL Discord support forum without leaving Claude Code.
+**Direct Discord posting** - Post bug reports, share wins, ask for advice, or show off your dApp straight to the MIDL Discord without leaving Claude Code. The agent proactively suggests sharing when it thinks the community would benefit.
 
 ## Quick Start
 
@@ -111,7 +111,8 @@ The system prompt teaches Claude to:
 - Auto-fetch MIDL SDK docs at session start
 - Recognize MIDL-related questions and activate specialized assistance
 - Generate diagnostic reports for bugs
-- Post issues to Discord support forum
+- Post to Discord: bug reports, successes, milestones, advice requests, and cool builds
+- Moderate content before posting (blocks profanity, spam, and inappropriate content)
 
 ## Usage
 
@@ -136,12 +137,19 @@ The agent will:
 2. Check the docs for known issues
 3. Generate a diagnostic report with suggested fixes
 
-### Post to Discord Support
+### Post to Discord
 
-If you're still stuck:
-> "Post this to the MIDL Discord forum"
+The agent proactively suggests posting to Discord — not just for bugs, but whenever it thinks the community would care:
 
-Creates a support thread directly from Claude Code. Rate limit: 5 posts/hour.
+> "Post this bug to the MIDL Discord forum"
+
+> "Share this deployment milestone with the community"
+
+> "Ask the builders forum about this architecture question"
+
+Creates a thread directly from Claude Code. Bug reports include a diagnostic attachment; other posts are lightweight community messages. Rate limit: 5 posts/hour.
+
+All posts are moderated before submission — the agent checks for profanity, spam, and inappropriate content.
 
 ## Documentation
 
