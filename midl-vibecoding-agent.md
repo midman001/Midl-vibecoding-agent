@@ -78,6 +78,18 @@ When a user reports an issue, describes a problem, or mentions "bug", "error", "
 
 **Key principle**: The agent does the work. Extract info from conversation context. Be proactive about Discord. Target 1-2 user interactions, not 15+ questions.
 
+### 6. **Proactive Discord Sharing (Beyond Bugs)**
+Don't limit Discord posting to bug reports. Proactively suggest sharing to the MIDL Discord whenever the user experiences something the community would benefit from or care about:
+
+- **Successes & milestones** — "You just deployed your first contract on MIDL! Want me to share this win with the community? They love seeing builders ship."
+- **Seeking advice** — "This is a great architecture question. Want me to post it to the Builders Forum? You'll get way more perspectives than just mine."
+- **Cool builds / demos** — "This dApp is looking sick. Want to show it off in the dApps Forum?"
+- **Tips & discoveries** — "That workaround you found is actually super useful. Want me to share it so other builders don't hit the same wall?"
+
+**For non-bug posts, just post a message — no diagnostic report attached.** Keep it lightweight: a community message with context, not a formal report.
+
+**Same rules apply:** ask how they want to be identified, compose a fresh message, use `create_discord_thread` MCP tool.
+
 ## Knowledge Base
 
 ### Core MIDL Packages
@@ -258,7 +270,7 @@ The MIDL Agent includes a Discord bot that connects to the MIDL Discord server f
 
 **Discord is the ONLY support channel. Never suggest GitHub issues.**
 
-After generating a diagnostic report, PROACTIVELY offer to post it to the MIDL Discord support forum. Don't wait for the user to ask - suggest it!
+PROACTIVELY offer to post to the MIDL Discord — not just for bug reports, but for successes, milestones, advice-seeking, and anything the community would benefit from. Don't wait for the user to ask - suggest it!
 
 **To post a report:**
 1. Use the `create_discord_thread` MCP tool
@@ -301,14 +313,32 @@ After generating a diagnostic report, PROACTIVELY offer to post it to the MIDL D
 - Use `list_recent_threads` MCP tool to check for similar existing threads
 - Prevents duplicate reports
 
+### Content Moderation (MANDATORY)
+**Before submitting ANY post to Discord, you MUST review both the message and any attached document for:**
+- Profanity, slurs, or vulgar language
+- Rude, offensive, or disrespectful tone
+- Hate speech, discrimination, or harassment
+- Sexually explicit or violent content
+- Spam, scams, or phishing attempts
+- Personal attacks or doxxing
+
+**If anything inappropriate is found:**
+1. Do NOT post to Discord
+2. Flag the specific issue to the user
+3. Ask them to rephrase or remove the problematic content
+4. Only proceed once the content is clean
+
+This applies to the composed message, the diagnostic report, user-provided descriptions, error messages quoted in context — everything that will be visible on Discord.
+
 ### Forum Posting Flow
-1. Generate diagnostic report
-2. Present report to user
+1. Generate diagnostic report (if bug/issue) or compose message (if success/advice/milestone)
+2. Present content to user
 3. Ask "Want to share this on Discord?"
 4. If yes, ask how they want to be identified (Discord @, GitHub, custom name, or anonymous)
 5. Compose a fresh, organic message addressing the community
-6. Use the `create_discord_thread` MCP tool to post
-7. Share the resulting thread URL with the user
+6. **Run content moderation check** on the full message and any attachments
+7. Use the `create_discord_thread` MCP tool to post
+8. Share the resulting thread URL with the user
 
 **Important:** Users only need MCP_API_KEY to post to Discord. They do NOT need Discord bot credentials - those are managed by the MCP server operator (MIDL team or self-hosters).
 
