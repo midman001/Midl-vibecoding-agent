@@ -67,6 +67,20 @@ Write a fresh, organic show-and-tell message. NEVER use a template. The message 
 Flag and fix before posting.
 </step>
 
+<step name="optional_attachment">
+Ask the user if they want to attach a detailed project breakdown:
+
+Use AskUserQuestion:
+- header: "Attachment"
+- question: "Want to attach a detailed breakdown (architecture, features, how it works) to the post?"
+- options:
+  - "No, just the message" — post the composed message only
+  - "Yes, generate one" — generate a project breakdown covering architecture, MIDL features used, and how it works, then attach it as reportMarkdown
+
+If they say yes, draft the breakdown, show it for review, then include it as `reportMarkdown`.
+If no, leave `reportMarkdown` empty.
+</step>
+
 <step name="check_duplicates">
 Use `list_recent_threads` MCP tool to check for recent posts about the same project.
 If found, suggest updating the existing thread instead of creating a new one.
@@ -76,7 +90,7 @@ If found, suggest updating the existing thread instead of creating a new one.
 Use `create_discord_thread` MCP tool:
 - `title`: Catchy project title (max 100 chars), e.g., "Built a rune swap dApp with MIDL hooks"
 - `summary`: The composed show-and-tell message
-- `reportMarkdown`: empty (no diagnostic report for showcases)
+- `reportMarkdown`: the project breakdown if user opted in, otherwise empty
 
 Share the resulting thread URL with the user.
 

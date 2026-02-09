@@ -70,6 +70,20 @@ If ANYTHING inappropriate is found:
 4. Only proceed once clean
 </step>
 
+<step name="optional_attachment">
+Ask the user if they want to attach a detailed write-up with their post:
+
+Use AskUserQuestion:
+- header: "Attachment"
+- question: "Want to attach a detailed write-up (tech stack, architecture, lessons learned) to the post?"
+- options:
+  - "No, just the message" — post the composed message only
+  - "Yes, generate one" — generate a short write-up covering what was built, tech choices, and key takeaways, then attach it as reportMarkdown
+
+If they say yes, draft the write-up, show it for review, then include it as `reportMarkdown`.
+If no, leave `reportMarkdown` empty.
+</step>
+
 <step name="check_duplicates">
 Use `list_recent_threads` MCP tool to check for similar recent posts.
 If a similar thread exists, tell the user and ask if they still want to post.
@@ -79,7 +93,7 @@ If a similar thread exists, tell the user and ask if they still want to post.
 Use `create_discord_thread` MCP tool:
 - `title`: Short celebratory title (max 100 chars), e.g., "Just shipped my first MIDL dApp!"
 - `summary`: The full composed message
-- `reportMarkdown`: empty (no diagnostic report for wins)
+- `reportMarkdown`: the write-up if user opted in, otherwise empty
 
 Share the resulting thread URL with the user.
 

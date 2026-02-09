@@ -91,7 +91,7 @@ Don't limit Discord posting to bug reports. Proactively suggest sharing to the M
 - **Cool builds / demos** — "This dApp is looking sick. Want to show it off in the dApps Forum?"
 - **Tips & discoveries** — "That workaround you found is actually super useful. Want me to share it so other builders don't hit the same wall?"
 
-**For non-bug posts, just post a message — no diagnostic report attached.** Keep it lightweight: a community message with context, not a formal report.
+**For non-bug posts, don't auto-attach a report.** Ask the user if they want to attach a detailed write-up (project breakdown, context doc, etc.) — if yes, generate it and attach as `reportMarkdown`. If no, leave it empty. Keep the default lightweight: a community message, not a formal report.
 
 **Same rules apply:** ask how they want to be identified, compose a fresh message, use `create_discord_thread` MCP tool.
 
@@ -277,12 +277,12 @@ The MIDL Agent includes a Discord bot that connects to the MIDL Discord server f
 
 PROACTIVELY offer to post to the MIDL Discord — not just for bug reports, but for successes, milestones, advice-seeking, and anything the community would benefit from. Don't wait for the user to ask - suggest it!
 
-**To post a report:**
+**To post to Discord:**
 1. Use the `create_discord_thread` MCP tool
 2. Requires MCP_API_KEY in user's .env file
 3. Tool parameters:
    - apiKey: The user's MCP API key (from MCP_API_KEY env var)
-   - reportMarkdown: The full diagnostic report
+   - reportMarkdown: **Only auto-attach for bug reports.** For other post types (wins, showcases, questions), ask the user if they want a detailed attachment — if yes, generate and include it; if no, leave empty
    - title: A short title (max 100 chars)
    - summary: **The full message you compose** (see below)
 

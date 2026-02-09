@@ -66,6 +66,20 @@ Write a fresh, organic question/advice-seeking message. NEVER use a template. Th
 Flag and fix before posting.
 </step>
 
+<step name="optional_attachment">
+Ask the user if they want to attach additional context for the community:
+
+Use AskUserQuestion:
+- header: "Attachment"
+- question: "Want to attach a detailed context doc (code snippets, architecture, what you've tried) to help the community answer?"
+- options:
+  - "No, just the message" — post the composed message only
+  - "Yes, generate one" — generate a context doc with relevant code, architecture details, and approaches considered, then attach it as reportMarkdown
+
+If they say yes, draft the context doc, show it for review, then include it as `reportMarkdown`.
+If no, leave `reportMarkdown` empty.
+</step>
+
 <step name="check_duplicates">
 Use `list_recent_threads` MCP tool to check for similar recent questions.
 If found, show the existing thread — the answer might already be there.
@@ -75,7 +89,7 @@ If found, show the existing thread — the answer might already be there.
 Use `create_discord_thread` MCP tool:
 - `title`: The question, condensed (max 100 chars), e.g., "Best approach for multi-sig wallet with MIDL hooks?"
 - `summary`: The composed message
-- `reportMarkdown`: empty (no diagnostic report for questions)
+- `reportMarkdown`: the context doc if user opted in, otherwise empty
 
 Share the resulting thread URL with the user.
 
