@@ -4,55 +4,64 @@ Your AI coding companion for building Web3 applications on Bitcoin with the MIDL
 
 ## What It Does
 
-**Real-time MIDL SDK assistance** - Ask anything about the MIDL.js library and get accurate, up-to-date answers pulled directly from the documentation. No more digging through docs or outdated Stack Overflow answers.
+**Real-time MIDL SDK assistance** — Ask anything about the MIDL.js library and get accurate, up-to-date answers pulled directly from the documentation. No more digging through docs or outdated Stack Overflow answers.
 
-**Bug report generation** - When you hit a wall, the agent generates structured diagnostic reports with your environment, error details, and suggested fixes.
+**Smart routing** — Simple questions get answered instantly. Heavy research, bug reports, and deep code reviews get delegated to a worker agent so your main conversation stays clean.
 
-**Direct Discord posting** - Post bug reports, share wins, ask for advice, or show off your dApp straight to the MIDL Discord without leaving Claude Code. The agent proactively suggests sharing when it thinks the community would benefit.
+**Discord commands** — Share wins, report bugs, ask for advice, or show off your build to the MIDL community without leaving Claude Code.
 
 ## Quick Start
 
 ### Prerequisites
 
 - Claude Code CLI installed (`claude --version`)
-- Discord account (for MCP API key)
+- Discord account (for posting to MIDL Discord)
 
-### Step 1: Clone the Agent (Global Installation)
+### Step 1: Install the Skill
 
-Install to your Claude global config directory so it works across all projects:
+Clone to your Claude Code skills directory:
 
 ```bash
-# Create agents directory if it doesn't exist
-mkdir -p ~/.claude/agents
-
-# Clone the agent
-git clone https://github.com/midman001/Midl-vibecoding-agent.git ~/.claude/agents/Midl-vibecoding-agent
+git clone https://github.com/midman001/Midl-vibecoding-agent.git ~/.claude/skills/midl-vibecoding-agent
 ```
 
-This installs the agent globally at `~/.claude/agents/Midl-vibecoding-agent/`.
+The skill auto-registers — Claude will detect MIDL-related topics and activate it.
 
-### Step 2: Get your MCP API key
+### Step 2: Install the Commands
+
+Copy the Discord commands to your Claude Code commands directory:
+
+```bash
+mkdir -p ~/.claude/commands/midl
+cp ~/.claude/skills/midl-vibecoding-agent/commands/*.md ~/.claude/commands/midl/
+```
+
+This gives you access to:
+
+| Command | What it does |
+|---------|-------------|
+| `/midl:share-win` | Share a success or milestone with the community |
+| `/midl:report-bug` | Generate a diagnostic report and post to Discord |
+| `/midl:ask-community` | Ask the builders forum for advice |
+| `/midl:show-build` | Show off a dApp or feature you built |
+
+### Step 3: Get Your MCP API Key (for Discord posting)
 
 1. Join the [MIDL Discord server](https://discord.com/invite/midl)
 2. Complete verification as described in the welcome channel
 3. Run `/setup-mcp` in any channel
 4. Copy the API key from the ephemeral message
 
-### Step 3: Configure Claude Code (Global Installation)
+### Step 4: Configure the MCP Server
 
-Add **both** the agent and MCP server to your global Claude Code settings (`~/.claude.json`):
+Add the Discord MCP server to your Claude Code config. Edit `~/.claude.json`:
 
 ```json
 {
-  "projects": {
-    "*": {
-      "systemPromptFile": "~/.claude/agents/Midl-vibecoding-agent/midl-vibecoding-agent.md"
-    }
-  },
   "mcpServers": {
     "midl-discord": {
       "command": "node",
-      "args": ["~/.claude/agents/Midl-vibecoding-agent/stdio-proxy/index.js"],
+      "args": ["~/.claude/skills/midl-vibecoding-agent/stdio-proxy/index.js"],
       "env": {
         "MCP_API_KEY": "YOUR_MCP_API_KEY"
       }
@@ -61,20 +70,14 @@ Add **both** the agent and MCP server to your global Claude Code settings (`~/.c
 }
 ```
 
-Replace `YOUR_MCP_API_KEY` with the key from step 2.
+Replace `YOUR_MCP_API_KEY` with the key from step 3.
 
-**What this does:**
-- `"*"` enables the agent for ALL your projects globally
-- The `mcpServers` section gives Claude access to the Discord posting tools
-
-**Note for Windows users:** Use forward slashes in paths, or escape backslashes:
+**Windows users:** Use forward slashes in paths:
 ```json
-"args": ["C:/Users/yourname/.claude/agents/Midl-vibecoding-agent/stdio-proxy/index.js"]
+"args": ["C:/Users/yourname/.claude/skills/midl-vibecoding-agent/stdio-proxy/index.js"]
 ```
 
-**Single project only?** Replace `"*"` with your project path (e.g., `"/home/user/my-project"`).
-
-**Alternative: Direct HTTP connection** (if you don't want to run the local proxy)
+**Alternative: Direct HTTP connection** (if you don't want to run the local proxy):
 
 ```json
 {
@@ -92,76 +95,122 @@ Replace `YOUR_MCP_API_KEY` with the key from step 2.
 
 Note: Direct HTTP may have compatibility issues with some Claude Code versions. The stdio proxy is more reliable.
 
-### Step 4: Verify Installation
+### Step 5: Verify Installation
 
-Start a new Claude Code session in your project and ask:
+Start a new Claude Code session and try:
 
-> "Check the MIDL MCP server status"
+> "What MIDL SDK hooks are available for broadcasting?"
 
-Claude should respond with server connection details and your rate limit status.
+Claude should activate the MIDL Agent personality and give you a detailed answer.
+
+## How It Works
+
+The MIDL Agent uses a **skill + worker** architecture:
+
+```
+User says something MIDL-related
+  -> Skill detects it (auto-match or explicit /midl-vibecoding-agent)
+  -> Simple question? Answered inline with MIDL Agent personality
+  -> Heavy work? Spawns a worker agent with full MIDL knowledge base
+  -> Worker researches docs, generates reports, reviews code
+  -> Results presented back in main conversation
+  -> Discord posting? Handled inline (MCP tools need main context)
+```
+
+**Why this matters:**
+- Your main conversation doesn't get bloated with doc-fetching and report generation
+- Simple Q&A is instant — no subagent overhead
+- MCP tools (Discord posting) work correctly in the main context
 
 ## What Gets Installed
 
-| Component | Purpose |
-|-----------|---------|
-| `midl-vibecoding-agent.md` | Agent behavior and MIDL knowledge base |
-| `stdio-proxy/index.js` | Local proxy for reliable MCP connection |
-
-The system prompt teaches Claude to:
-- Auto-fetch MIDL SDK docs at session start
-- Recognize MIDL-related questions and activate specialized assistance
-- Generate diagnostic reports for bugs
-- Post to Discord: bug reports, successes, milestones, advice requests, and cool builds
-- Moderate content before posting (blocks profanity, spam, and inappropriate content)
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| `SKILL.md` | `~/.claude/skills/midl-vibecoding-agent/` | Slim router — personality, routing, inline handling |
+| `midl-vibecoding-agent.md` | `~/.claude/skills/midl-vibecoding-agent/` | Full worker prompt — knowledge base, execution instructions |
+| `commands/*.md` | `~/.claude/commands/midl/` | Discord slash commands |
+| `stdio-proxy/index.js` | `~/.claude/skills/midl-vibecoding-agent/` | Local MCP proxy for Discord |
 
 ## Usage
 
 ### Ask About MIDL SDK
 
-Just ask naturally:
+Just ask naturally — the skill auto-activates on MIDL topics:
+
 > "How do I use the useBroadcast hook to send BTC?"
 
 > "What's the difference between testnet4 and mainnet configuration?"
 
 > "Show me how to set up MidlProvider in my React app"
 
-The agent fetches current documentation and gives you accurate code examples.
+### Discord Commands
+
+**Share a win:**
+```
+/midl:share-win
+```
+Just shipped something? The agent extracts what you built from the conversation, composes a celebratory message, and posts it to the MIDL Discord.
+
+**Report a bug:**
+```
+/midl:report-bug
+```
+Hit an error? The agent generates a full diagnostic report from your conversation context — error messages, environment, steps to reproduce — and posts it to Discord's support forum.
+
+**Ask the community:**
+```
+/midl:ask-community
+```
+Facing an architecture decision or stuck on an approach? Posts a thoughtful question to the builders forum.
+
+**Show off a build:**
+```
+/midl:show-build
+```
+Built something cool? Show-and-tell post to the community with what you built and how.
+
+All commands:
+- Extract context from your conversation (minimal questions asked)
+- Ask how you want to be identified (Discord @, GitHub, custom name, or anonymous)
+- Compose a fresh message (never templated)
+- Run content moderation before posting
+- Check for duplicate threads
+- Post via MCP and share the thread URL
 
 ### Get Help With Errors
 
-When something breaks:
+When something breaks, just describe the issue:
+
 > "I'm getting 'unknown letter x in PSBT' when trying to broadcast"
 
-The agent will:
-1. Analyze your error
-2. Check the docs for known issues
-3. Generate a diagnostic report with suggested fixes
+The agent will analyze, check docs, and offer to post to Discord if you want community help.
 
-### Post to Discord
+## Updating
 
-The agent proactively suggests posting to Discord — not just for bugs, but whenever it thinks the community would care:
+Pull the latest changes:
 
-> "Post this bug to the MIDL Discord forum"
+```bash
+git -C ~/.claude/skills/midl-vibecoding-agent pull
+```
 
-> "Share this deployment milestone with the community"
+If commands were updated, re-copy them:
 
-> "Ask the builders forum about this architecture question"
-
-Creates a thread directly from Claude Code. Bug reports include a diagnostic attachment; other posts are lightweight community messages. Rate limit: 5 posts/hour.
-
-All posts are moderated before submission — the agent checks for profanity, spam, and inappropriate content.
+```bash
+cp ~/.claude/skills/midl-vibecoding-agent/commands/*.md ~/.claude/commands/midl/
+```
 
 ## Documentation
 
-- [EXAMPLES.md](EXAMPLES.md) - Usage scenarios
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues and solutions
-- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+- [EXAMPLES.md](EXAMPLES.md) — Usage scenarios
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) — Common issues and solutions
+- [CONTRIBUTING.md](CONTRIBUTING.md) — How to contribute
 
 ## Links
 
-- [MIDL SDK Documentation](https://js.midl.xyz/docs)
+- [MIDL SDK Documentation](https://js.midl.xyz/)
 - [MIDL Discord](https://discord.com/invite/midl)
+- [MIDL MCP](https://github.com/Svector-anu/midl-mcp) — Deploy contracts, check balances, broadcast transactions
 
 ## License
 
-MIT - see [LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE)
